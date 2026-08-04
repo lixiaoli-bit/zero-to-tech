@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linux / Vim / 服务器 · 基础笔记</title>
+  <!-- Font Awesome 6 (免费图标库) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f6f9fc 0%, #edf2f7 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      box-shadow: 0 20px 40px -12px rgba(0,20,30,0.25),
+                  0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.5);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 3px solid #2b6c9e;
+      padding-bottom: 0.6rem;
+      margin-bottom: 2rem;
+      color: #0b2a41;
+    }
+
+    h1 i {
+      color: #2b6c9e;
+      font-size: 2.2rem;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1d4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.06), transparent);
+      border-radius: 0 12px 12px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.5rem;
+      width: 2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-top: 1.6rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1f4a6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.2rem;
+      width: 1.8rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.6rem;
+      border-radius: 18px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.2rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), 0 6px 12px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.3rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.6rem;
+      text-align: center;
+      margin-right: 0.3rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 20px;
+      padding: 1.2rem 1.6rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 1.8rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    hr {
+      margin: 2rem 0 1rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.5rem;
+      text-align: right;
+      font-size: 0.9rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    /* 小屏优化 */
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 1.9rem;
+        flex-wrap: wrap;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fas fa-terminal"></i> 
+    Linux / Vim / 服务器 · 基础笔记
+    <span style="font-size: 1rem; margin-left: auto; background: #d4e3f0; padding: 0.2rem 1.2rem; border-radius: 40px; font-weight: 400; color: #124263;">
+      <i class="fas fa-cloud-upload-alt"></i> 从零起步
+    </span>
+  </h1>
+
+  <!-- 1. 目录与路径 -->
+  <h2><i class="fas fa-folder-tree"></i> 目录与路径符号</h2>
+  <div class="grid-2col">
+    <div class="grid-item"><i class="fas fa-home"></i> <span class="inline-code">~</span> 家目录</div>
+    <div class="grid-item"><i class="fas fa-slash"></i> <span class="inline-code">/</span> 根目录</div>
+  </div>
+
+  <!-- 2. Vim 基本操作 -->
+  <h2><i class="fas fa-pen-fancy"></i> Vim 基本操作（写文件）</h2>
+  <p><i class="fas fa-chevron-right" style="color:#2b7aa2;"></i> 用 Vim 创建并写入文件：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> vim hello.txt</div>
+  <div class="highlight-box">
+    <i class="fas fa-list-ul"></i> <strong>进入 Vim 后的操作步骤：</strong>
+    <ol style="margin-top: 0.3rem;">
+      <li><i class="fas fa-keyboard"></i> 按 <span class="inline-code">i</span> 进入编辑模式（插入模式）</li>
+      <li><i class="fas fa-pencil-alt"></i> 输入内容，例如 <span class="inline-code">hello terminal</span></li>
+      <li><i class="fas fa-times"></i> 按 <span class="inline-code">Esc</span> 退出编辑模式</li>
+      <li><i class="fas fa-save"></i> 输入 <span class="inline-code">:wq</span>（保存并退出）如果报错，:q!不保存退出，sudo vim 进入</li>
+      <li><i class="fas fa-arrow-right"></i> 按回车</li>
+    </ol>
+  </div>
+
+  <!-- 3. Mac 快速打开文件夹 -->
+  <h2><i class="fab fa-apple"></i> Mac 快速打开文件夹</h2>
+  <p>在终端中执行：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> open ~/zero-to-tech</div>
+  <p><i class="fas fa-folder-open" style="color:#2b7aa2;"></i> 该命令会通过访达（Finder）打开指定目录。</p>
+
+  <!-- 4. DNS & 端口 -->
+  <h2><i class="fas fa-globe"></i> DNS 与端口基础概念</h2>
+  <ul>
+    <li><i class="fas fa-exchange-alt"></i> <strong>DNS</strong>：将域名翻译为 IP 地址。</li>
+    <li><i class="fas fa-plug"></i> <strong>端口</strong>：同一台电脑上不同网络服务的入口标识。</li>
+  </ul>
+
+  <h3><i class="fas fa-route"></i> 浏览器访问网页流程</h3>
+  <ol>
+    <li><i class="fas fa-edit"></i> 输入域名</li>
+    <li><i class="fas fa-search"></i> 浏览器向 DNS 查询对应的 IP 地址</li>
+    <li><i class="fas fa-arrow-right"></i> DNS 返回 IP</li>
+    <li><i class="fas fa-server"></i> 浏览器通过 IP 找到目标服务器</li>
+    <li><i class="fas fa-door-open"></i> 浏览器通过特定端口（如 80）访问服务</li>
+    <li><i class="fas fa-code"></i> 服务器返回网页内容</li>
+    <li><i class="fas fa-desktop"></i> 浏览器渲染显示</li>
+  </ol>
+
+  <!-- 5. 云服务器 & SSH -->
+  <h2><i class="fas fa-cloud"></i> 云服务器与 SSH 登录</h2>
+  <p>购买云服务器后，通常获得：</p>
+  <ul>
+    <li><i class="fas fa-globe-asia"></i> 公网 IP 地址</li>
+    <li><i class="fas fa-user"></i> 用户名（如 <span class="inline-code">ubuntu</span> 或 <span class="inline-code">root</span>）</li>
+    <li><i class="fas fa-lock"></i> 登录密码</li>
+  </ul>
+
+  <h3><i class="fas fa-key"></i> SSH 远程登录命令</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> ssh 用户名@服务器公网IP</div>
+  <p>示例：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> ssh ubuntu@123.45.67.89</div>
+  <p><i class="fas fa-check-circle" style="color: #2b7aa2;"></i> 登录成功后，终端提示符会变为类似：</p>
+  <div class="code-block" style="background: #162b3a;"><i class="fas fa-chevron-right" style="color:#8fcbff;"></i> ubuntu@your-server:~$</div>
+
+  <!-- 6. 安装 Nginx -->
+  <h2><i class="fas fa-server"></i> 安装 Nginx（Web 服务器）</h2>
+  <p><i class="fas fa-tasks"></i> Nginx 职责：</p>
+  <ul>
+    <li><i class="fas fa-headphones"></i> 持续监听 80 端口</li>
+    <li><i class="fas fa-reply"></i> 响应 HTTP 请求，返回网页内容</li>
+  </ul>
+
+  <h3><i class="fas fa-ubuntu"></i> 安装步骤（Ubuntu 环境）</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> sudo apt update<br><i class="fas fa-terminal"></i> sudo apt install nginx -y</div>
+  <p><i class="fas fa-info-circle" style="color:#2b7aa2;"></i> <span class="inline-code">sudo</span> 执行时需要输入当前用户的密码。</p>
+
+  <h3><i class="fas fa-heartbeat"></i> 检查 Nginx 运行状态</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> systemctl status nginx</div>
+  <p>看到 <span class="inline-code">Active: active (running)</span> 表示运行正常。这里输入ip地址就可以看到nginx的默认界面，至于ssh直接回车就可以</p>
+
+  <!-- 7. 验证默认页面 -->
+  <h2><i class="fas fa-file-code"></i> 验证 Nginx 默认页面</h2>
+  <p>Nginx 默认配置文件位置：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> cat /etc/nginx/sites-available/default</div>
+  <p>找到关键配置行：</p>
+  <div class="code-block" style="background: #0f222f;"><i class="fas fa-folder-open"></i> root /var/www/html;</div>
+  <p>表示网页文件存放在 <span class="inline-code">/var/www/html</span> 目录。</p>
+
+  <p>进入该目录查看：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> cd /var/www/html<br><i class="fas fa-terminal"></i> ls</div>
+  <p>默认页面文件通常为 <span class="inline-code">index.nginx-debian.html</span>。</p>
+
+  <p>查看其内容：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> cat index.nginx-debian.html</div>
+  <p><i class="fas fa-check" style="color:#2b7aa2;"></i> 该文件就是浏览器中默认页面对应的 HTML 源文件。</p>
+
+  <!-- 分割线 -->
+  <hr>
+
+  <!-- 底部小彩蛋 -->
+  <div class="footer-note">
+    <i class="fas fa-rocket"></i> 
+    <span>从零开始 · 掌握基础</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># 笔记整理</span>
+  </div>
+
+</div>
+</body>
+</html>

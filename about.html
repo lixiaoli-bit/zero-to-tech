@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git · 服务器 · 部署笔记 · 美化版</title>
+  <!-- Font Awesome 6 (免费图标库) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f4f8fc 0%, #e6eef5 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 44px;
+      padding: 2.8rem 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0,20,30,0.25),
+                  0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 4px solid #1f6390;
+      padding-bottom: 0.7rem;
+      margin-bottom: 2.2rem;
+      color: #0a293f;
+      flex-wrap: wrap;
+    }
+
+    h1 i {
+      color: #1f6390;
+      font-size: 2.4rem;
+    }
+
+    .badge-header {
+      font-size: 1rem;
+      margin-left: auto;
+      background: #d2e3f0;
+      padding: 0.25rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 400;
+      color: #124263;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 500;
+      margin-top: 2.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1a4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1.2rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.07), transparent);
+      border-radius: 0 14px 14px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.6rem;
+      width: 2.2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 1.8rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1d4b6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.3rem;
+      width: 2rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.4rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), 0 6px 14px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1.1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.8rem;
+      text-align: center;
+      margin-right: 0.2rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 22px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    hr {
+      margin: 2.2rem 0 1.2rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 0.95rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: #1f6390;
+      color: white;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 1rem;
+      margin-right: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* 小屏优化 */
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+      .badge-header {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fas fa-code-branch"></i> 
+    Git · 服务器 · 部署笔记
+    <span class="badge-header"><i class="fas fa-cloud-upload-alt"></i> 从零到公网</span>
+  </h1>
+
+  <!-- ===== 1. Git 本地基础 ===== -->
+  <h2><i class="fas fa-repository"></i> Git 本地仓库</h2>
+  <p><i class="fas fa-folder-open" style="color:#2b7aa2;"></i> 仓库 (repository) 是 Git 管理的目录，电脑里可以有很多个。</p>
+
+  <h3><i class="fas fa-check-circle"></i> 第 1 步：确认 Git 已安装</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> git --version</div>
+
+  <h3><i class="fas fa-id-badge"></i> 第 2 步：配置提交身份（每台电脑一次）</h3>
+  <p>先检查是否已配置：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> git config --global user.name <br> git config --global user.email</div>
+  <p>如果未配置，执行：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> git config --global user.name "你的名字" <br> git config --global user.email "你的邮箱"</div>
+
+  <h3><i class="fas fa-database"></i> 第 3 步：初始化仓库</h3>
+  <p>进入项目目录并初始化：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> cd ~/zero-to-tech <br> git init  <span style="color: #8fcbff;"># 让git管这个目录</span></div>
+  <p>然后查看状态：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> git status</div>
+  <p>建议做一个小改动，然后走一遍 add / commit：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> git add . <br> git commit -m "修改首页标题文案"</div>
+
+  <!-- ===== 2. GitHub 远程 ===== -->
+  <h2><i class="fab fa-github"></i> GitHub 远程仓库</h2>
+
+  <h3><i class="fas fa-plus-circle"></i> 第 1 步：在 GitHub 创建空仓库</h3>
+  <ul>
+    <li><i class="fas fa-tag"></i> 仓库名：<span class="inline-code">zero-to-tech</span></li>
+    <li><i class="fas fa-globe"></i> Public / Private：按需求</li>
+    <li><i class="fas fa-ban"></i> 不勾选 <span class="inline-code">Initialize this repository with a README</span></li>
+  </ul>
+
+  <h3><i class="fas fa-key"></i> 第 2 步：配置 SSH（每台电脑一次）</h3>
+  <p>生成密钥对：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> ssh-keygen -t ed25519 -C "你的邮箱" <br> <span style="color: #8fcbff;"># 连续回车默认值</span></div>
+  <div class="highlight-box">
+    <i class="fas fa-shield-alt"></i> 生成后一般会有：
+    <ul style="margin-top: 0.3rem;">
+      <li><i class="fas fa-lock"></i> <span class="inline-code">~/.ssh/id_ed25519</span> (私钥，不要外传)</li>
+      <li><i class="fas fa-lock-open"></i> <span class="inline-code">~/.ssh/id_ed25519.pub</span> (公钥，提交给平台)</li>
+      <li><i class="fas fa-lock-open"></i> windows：CMD / PowerShell 中输入 cd %USERPROFILE%\.ssh   dir查看文件</dir></li>
+    
+    </ul>
+  </div>
+  <p>验证连通性：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> ssh -T git@github.com</div>
+  <p>看到 <span class="inline-code">Hi 你的用户名! You've successfully authenticated</span> 即成功。</p>
+
+  <h3><i class="fas fa-link"></i> 第 3 步：关联本地与远程仓库</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> cd ~/zero-to-tech <br> git remote add origin git@github.com:你的用户名/zero-to-tech.git</div>
+  <p>验证：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> git remote -v</div>
+
+  <h3><i class="fas fa-upload"></i> 第 4 步：第一次 push</h3>
+  <p>先确认当前分支名：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> git branch</div>
+  <p>如果是 <span class="inline-code">main</span>：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> git push -u origin main</div>
+  <p>如果是 <span class="inline-code">master</span>：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> git push -u origin master</div>
+
+  <h3><i class="fas fa-sync-alt"></i> 日常更新流程</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> git add . <br> git commit -m "写清楚这次改了什么" <br> git push</div>
+
+  <!-- ===== 3. 服务器部署 ===== -->
+  <h2><i class="fas fa-server"></i> 服务器部署 · 从 GitHub 到公网</h2>
+
+  <h3><i class="fas fa-check-double"></i> 确认服务器上有 Git</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> git --version</div>
+  <p>如果 <span class="inline-code">command not found</span>，安装：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> sudo apt update <br> sudo apt install -y git</div>
+
+  <h3><i class="fas fa-clone"></i> 第 4 步：把代码 clone 到服务器</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> cd ~ <br> git clone git@github.com:你的用户名/zero-to-tech.git</div>
+
+  <h3><i class="fas fa-cog"></i> 第 5 步：看懂 Nginx 配置文件</h3>
+  <p>Nginx 配置目录结构（Ubuntu 惯例）：</p>
+  <div class="code-block" style="background: #0f222f;"><i class="fas fa-folder"></i> /etc/nginx/ <br> ├── nginx.conf  (主入口) <br> ├── sites-enabled/  (启用的站点) <br> └── sites-available/ (可用站点)</div>
+  <p>关键：<span class="inline-code">nginx.conf</span> 通过 <span class="inline-code">include</span> 引入其他配置，类似 HTML 的 <span class="inline-code">&lt;link&gt;</span>。</p>
+  <p>查看默认站点配置：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> cat /etc/nginx/sites-enabled/default</div>
+  <div class="highlight-box">
+    <i class="fas fa-bullseye"></i> <strong>核心配置行：</strong><br>
+    <span class="inline-code">root /var/www/html;</span>  →  Nginx 的“主目录”，所有 URL 从此拼接。
+  </div>
+
+  <h3><i class="fas fa-edit"></i> 第 6 步：把 root 改成我们自己的目录</h3>
+  <p>使用 vim 编辑：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> sudo vim /etc/nginx/sites-enabled/default</div>
+  <ul>
+    <li><i class="fas fa-search"></i> 按 <span class="inline-code">/</span> 搜索 <span class="inline-code">root /var</span></li>
+    <li><i class="fas fa-pen"></i> 按 <span class="inline-code">i</span> 进入插入模式</li>
+    <li><i class="fas fa-edit"></i> 改为 <span class="inline-code">root /home/ubuntu/zero-to-tech;</span></li>
+    <li><i class="fas fa-times"></i> 按 <span class="inline-code">Esc</span>，输入 <span class="inline-code">:wq</span> 保存退出</li>
+  </ul>
+
+  <h3><i class="fas fa-check"></i> 第 7 步：检查配置 + 重新加载</h3>
+  <p>语法检查：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> sudo nginx -t</div>
+  <p>平滑重新加载：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> sudo systemctl reload nginx</div>
+
+  <h3><i class="fas fa-exclamation-triangle"></i> 第 8 步：浏览器打开 → 404？</h3>
+  <p>浏览器访问 <span class="inline-code">http://你的公网IP</span>，出现 404 是预料之中的。</p>
+
+  <h3><i class="fas fa-search-location"></i> 第 9 步：破案——权限问题</h3>
+  <div class="highlight-box">
+    <i class="fas fa-user-lock"></i> <strong>Nginx 以 <span class="inline-code">www-data</span> 用户身份读取文件，不是 <span class="inline-code">ubuntu</span>。</strong>
+  </div>
+  <p>检查 <span class="inline-code">/home/ubuntu</span> 权限：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> ls -ld /home/ubuntu</div>
+  <p>如果输出最后三位是 <span class="inline-code">---</span>，则“其他人”无权限，修复：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> sudo chmod o+x /home/ubuntu</div>
+  <p>现在刷新浏览器，页面就出现了！</p>
+
+  <!-- ===== 4. 日常部署流程 ===== -->
+  <h2><i class="fas fa-arrows-spin"></i> 持续部署 · 日常节奏</h2>
+  <div class="grid-2col">
+    <div class="grid-item"><i class="fas fa-laptop-code"></i> <strong>本地</strong><br> git add . <br> git commit -m "说明" <br> git push</div>
+    <div class="grid-item"><i class="fas fa-cloud-upload-alt"></i> <strong>服务器 (SSH)</strong><br> cd ~/zero-to-tech <br> git pull <br> 浏览器刷新</div>
+  </div>
+  <p><i class="fas fa-lightbulb" style="color:#d99f2b;"></i> 这就是最朴素的“持续部署”，后续可自动化。</p>
+
+  <!-- 额外：概念补充 -->
+  <h2><i class="fas fa-globe"></i> DNS · 端口 · 浏览器流程</h2>
+  <ul>
+    <li><i class="fas fa-exchange-alt"></i> <strong>DNS</strong>：域名 → IP 地址</li>
+    <li><i class="fas fa-plug"></i> <strong>端口</strong>：服务的入口标识（如 80 为 HTTP）</li>
+  </ul>
+  <h3><i class="fas fa-route"></i> 浏览器访问网页流程</h3>
+  <ol>
+    <li><i class="fas fa-edit"></i> 输入域名</li>
+    <li><i class="fas fa-search"></i> 浏览器向 DNS 查询 IP</li>
+    <li><i class="fas fa-arrow-right"></i> DNS 返回 IP</li>
+    <li><i class="fas fa-server"></i> 浏览器通过 IP 找到服务器</li>
+    <li><i class="fas fa-door-open"></i> 通过端口 80 访问</li>
+    <li><i class="fas fa-code"></i> 服务器返回网页</li>
+    <li><i class="fas fa-desktop"></i> 浏览器渲染显示</li>
+  </ol>
+
+  <!-- 底部 -->
+  <hr>
+  <div class="footer-note">
+    <i class="fas fa-rocket"></i> 
+    <span>从零到公网 · 部署笔记</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># 命令行 · 服务器 · Git</span>
+    <i class="fas fa-terminal" style="margin-left: 0.5rem;"></i>
+  </div>
+
+</div>
+</body>
+</html>
