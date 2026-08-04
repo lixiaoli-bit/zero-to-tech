@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模块化 · 工程化笔记</title>
+  <!-- Font Awesome 6 (免费图标库) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f6f9fc 0%, #edf2f7 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      box-shadow: 0 20px 40px -12px rgba(0,20,30,0.25),
+                  0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.5);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 3px solid #2b6c9e;
+      padding-bottom: 0.6rem;
+      margin-bottom: 2rem;
+      color: #0b2a41;
+    }
+
+    h1 i {
+      color: #2b6c9e;
+      font-size: 2.2rem;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1d4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.06), transparent);
+      border-radius: 0 12px 12px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.5rem;
+      width: 2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-top: 1.6rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1f4a6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.2rem;
+      width: 1.8rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.6rem;
+      border-radius: 18px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.2rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), 0 6px 12px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.3rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.6rem;
+      text-align: center;
+      margin-right: 0.3rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 20px;
+      padding: 1.2rem 1.6rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 1.8rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+
+    .comparison-box {
+      background: rgba(255,255,255,0.5);
+      border-radius: 20px;
+      padding: 1.2rem 1.4rem;
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+    }
+
+    .comparison-box h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1d4b6e;
+      margin-bottom: 0.8rem;
+      font-size: 1.1rem;
+    }
+
+    .comparison-box ul {
+      margin-left: 1.2rem;
+      list-style-type: none;
+    }
+
+    .comparison-box ul li {
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+    }
+
+    .comparison-box ul li i {
+      width: 1.4rem;
+      color: #3d8ec0;
+    }
+
+    hr {
+      margin: 2rem 0 1rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.5rem;
+      text-align: right;
+      font-size: 0.9rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 1.9rem;
+        flex-wrap: wrap;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      .grid-2col, .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fas fa-cubes"></i> 
+    模块化 · 工程化笔记
+    <span style="font-size: 1rem; margin-left: auto; background: #d4e3f0; padding: 0.2rem 1.2rem; border-radius: 40px; font-weight: 400; color: #124263;">
+      <i class="fas fa-code-branch"></i> ES Module
+    </span>
+  </h1>
+
+  <!-- 1. 模块化与项目结构 -->
+  <h2><i class="fas fa-folder-open"></i> 项目结构 · 模块化改造</h2>
+  <p><i class="fas fa-chevron-right" style="color:#2b7aa2;"></i> 从单文件到多文件，模块化让代码更清晰：这是最原始的代码，我们要改造</p>
+  <div class="code-block"><i class="fas fa-folder"></i> zero-to-tech-4-1/<br>
+  &nbsp;&nbsp; index.html<br>
+  &nbsp;&nbsp; text-lab.html<br>
+  &nbsp;&nbsp; css/ &nbsp;&nbsp; (8 个样式文件)<br>
+  &nbsp;&nbsp; js/<br>
+  &nbsp;&nbsp;&nbsp;&nbsp; cards.js &nbsp;&nbsp; ← 卡片飞入动画<br>
+  &nbsp;&nbsp;&nbsp;&nbsp; score.js &nbsp;&nbsp; ← 分数动画<br>
+  &nbsp;&nbsp;&nbsp;&nbsp; nav.js &nbsp;&nbsp;&nbsp; ← 导航高亮<br>
+  &nbsp;&nbsp;&nbsp;&nbsp; main.js &nbsp;&nbsp; ← 入口文件</div>
+
+  <div class="highlight-box">
+    <i class="fas fa-lightbulb"></i> <strong>最后的核心变化：</strong> 每个 JS 文件通过 <span class="inline-code">import / export</span> 声明依赖，不再依赖全局变量和手动排序。
+  </div>
+
+  <!-- 2. 第三方库与依赖 -->
+  <h2><i class="fas fa-link"></i> 第三方库 · CDN 与模块引入-----------改</h2>
+  <p>使用 <span class="inline-code">anime.js</span> 动画库，从 CDN 引入：</p>
+  <p>你完全可以把那个网址里的内容下载到本地、存成 anime.iife.min.js，再写  src="anime.iife.min.js">，效果一模一样。
+之所以走 CDN，只是省得自己存一份——别人的服务器替我们存了。</p>
+  <div class="code-block"><i class="fas fa-code"></i> &lt;script src="https://cdn.jsdelivr.net/npm/animejs@4/lib/anime.iife.min.js"&gt;&lt;/script&gt;</div>
+  <p>模块化改造后，改为按需导入：</p>
+  <div class="code-block"><i class="fas fa-code"></i> import { animate, stagger } from "https://cdn.jsdelivr.net/npm/animejs@4/+esm";</div>
+  <p><i class="fas fa-check-circle" style="color:#2b7aa2;"></i> 每个模块只引入自己需要的功能，依赖关系清晰可见。</p>
+
+  <!-- 3. 模块化前后对比 -->
+  <h2><i class="fas fa-exchange-alt"></i> 改造前 vs 改造后</h2>
+  <div class="comparison-grid">
+    <div class="comparison-box">
+      <h4><i class="fas fa-times-circle" style="color:#b33;"></i> 传统 &lt;script&gt;</h4>
+      <ul>
+        <li><i class="fas fa-arrow-right"></i> anime.js 挂在 window 全局</li>
+        <li><i class="fas fa-arrow-right"></i> 四个 script，顺序不能乱，形成了暗依赖</li>
+        <li><i class="fas fa-arrow-right"></i> 函数靠 window 全局共享</li>
+        <li><i class="fas fa-arrow-right"></i> 找 CDN、塞 script、防撞名</li>
+        <li><i class="fas fa-arrow-right"></i> 双击 HTML 即可运行</li>
+      </ul>
+    </div>
+    <div class="comparison-box">
+      <h4><i class="fas fa-check-circle" style="color:#2b7aa2;"></i> 模块化 import</h4>
+      <ul>
+        <li><i class="fas fa-arrow-right"></i> 每个文件 import 自己要的部分</li>
+        <li><i class="fas fa-arrow-right"></i> 一个入口 main.js，依赖写在代码里</li>
+        <li><i class="fas fa-arrow-right"></i> 显式 import / export，模块作用域</li>
+        <li><i class="fas fa-arrow-right"></i> 一行 import，按需挑选</li>
+        <li><i class="fas fa-arrow-right"></i> 必须通过服务器访问 (CORS 限制)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4. 模块化代码示例 -->
+  <h2><i class="fas fa-file-code"></i> 模块化代码示例</h2>
+  <h3><i class="fas fa-export"></i> cards.js  score.js  nav.js 全部按照笔记修改</h3>
+  <div class="code-block"><i class="fas fa-code"></i> import { animate, stagger } from "https://cdn.jsdelivr.net/npm/animejs@4/+esm";<br><br>export function initCardsAnim() {<br>
+  &nbsp;&nbsp; animate(".card", {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp; opacity: [0, 1],<br>
+  &nbsp;&nbsp;&nbsp;&nbsp; translateY: [24, 0],<br>
+  &nbsp;&nbsp;&nbsp;&nbsp; delay: stagger(120),<br>
+  &nbsp;&nbsp;&nbsp;&nbsp; duration: 700,<br>
+  &nbsp;&nbsp;&nbsp;&nbsp; ease: "outBack"<br>
+  &nbsp;&nbsp; });<br>
+}</div>
+
+  <h3><i class="fas fa-import"></i> 我们再在 js 目录下，新建一个 main.js 文件</h3>
+  <div class="code-block"><i class="fas fa-code"></i> import { initNav } from "./nav.js";<br>
+import { initCardsAnim } from "./cards.js";<br>
+import { initScoreAnim } from "./score.js";<br><br>
+initNav();<br>
+initCardsAnim();<br>
+initScoreAnim();</div>
+
+  <p><i class="fas fa-check" style="color:#2b7aa2;"></i> 改造后，HTML 中只需一行：</p>
+  <div class="code-block"><i class="fas fa-code"></i> &lt;script type="module" src="js/main.js"&gt;&lt;/script&gt;</div>
+
+  <!-- 5. 工程化与生态 -->
+  <h2><i class="fas fa-tools"></i> 工程化 · 生态的力量</h2>
+  <ul>
+    <li><i class="fas fa-layer-group"></i> <strong>模块化</strong>：每个文件独立作用域，依赖通过 <span class="inline-code">import/export</span> 声明</li>
+    <li><i class="fas fa-globe-americas"></i> <strong>CDN 生态</strong>：一行 <span class="inline-code">import</span> 即可使用 <span class="inline-code">anime.js</span> 的 <span class="inline-code">stagger</span>、<span class="inline-code">scrambleText</span> 等功能</li>
+    <li><i class="fas fa-server"></i> <strong>开发服务器</strong>：模块化要求通过 HTTP 服务访问，可使用 Nginx 或本地 serve</li>
+    <li><i class="fas fa-rocket"></i> <strong>工程化第一招</strong>：模块化解决了全局污染和脚本顺序问题，为大型项目奠基</li>
+  </ul>
+
+  <div class="highlight-box">
+    <i class="fas fa-quote-left"></i> 
+    <strong>核心思想：</strong> “你写的东西默认只有自己看得见；想给别人用，得明文标 export；想用别人的，得明文写 import。”
+  </div>
+
+  <!-- 6. 部署与访问 -->
+  <h2><i class="fas fa-cloud-upload-alt"></i> 部署与访问方式</h2>
+  <p><strong>模块化改造后，不能再双击 HTML 运行，必须通过服务器提供--这是遗留问题</strong></p>
+  <ul>
+    <li><i class="fas fa-nginx"></i> 使用 Nginx 部署到服务器（如 3.5 节中的云主机）</li>
+    <li><i class="fas fa-terminal"></i> 本地开发可用 <span class="inline-code">npx serve</span> 或 VS Code Live Server</li>
+    <li><i class="fas fa-check-circle" style="color:#2b7aa2;"></i> 浏览器通过 <span class="inline-code">http://</span> 访问，模块加载正常</li>
+  </ul>
+
+  <div class="code-block"><i class="fas fa-terminal"></i> # 使用 Nginx 部署<br>
+  sudo cp -r zero-to-tech-4-1/* /var/www/html/<br>
+  # 然后访问 http://你的服务器IP</div>
+
+  <!-- 7. 总结 -->
+  <h2><i class="fas fa-graduation-cap"></i> 本节课核心收获</h2>
+  <ul>
+    <li><i class="fas fa-check"></i> 传统 <span class="inline-code">&lt;script&gt;</span> 组织方式存在 <strong>全局污染</strong> 和 <strong>顺序依赖</strong> 问题</li>
+    <li><i class="fas fa-check"></i> <strong>模块化</strong> 通过 <span class="inline-code">import/export</span> 解决上述问题，是工程化的第一步</li>
+    <li><i class="fas fa-check"></i> 模块化代码需要 <strong>HTTP 服务器</strong> 环境运行，无法直接双击打开</li>
+    <li><i class="fas fa-check"></i> 第三方库（如 anime.js）可通过 <strong>CDN + ESM</strong> 方式按需引入</li>
+    <li><i class="fas fa-check"></i> 理解了 <strong>“工程化”</strong> 的基本含义：用工具和规范管理代码复杂度</li>
+  </ul>
+
+  <hr>
+
+  <!-- 底部 -->
+  <div class="footer-note">
+    <i class="fas fa-brain"></i> 
+    <span>模块化 · 从零到工程化</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># 笔记 · 理解工程化</span>
+  </div>
+
+</div>
+</body>
+</html>
