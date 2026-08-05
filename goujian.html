@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>构建工具 · Vite 笔记 · 从零起步</title>
+  <!-- Font Awesome 6 (免费图标库) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f6f9fc 0%, #edf2f7 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      box-shadow: 0 20px 40px -12px rgba(0,20,30,0.25),
+                  0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.5);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 3px solid #2b6c9e;
+      padding-bottom: 0.6rem;
+      margin-bottom: 2rem;
+      color: #0b2a41;
+    }
+
+    h1 i {
+      color: #2b6c9e;
+      font-size: 2.2rem;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1d4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.06), transparent);
+      border-radius: 0 12px 12px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.5rem;
+      width: 2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-top: 1.6rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1f4a6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.2rem;
+      width: 1.8rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.6rem;
+      border-radius: 18px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.2rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), 0 6px 12px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.3rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.6rem;
+      text-align: center;
+      margin-right: 0.3rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 20px;
+      padding: 1.2rem 1.6rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 1.8rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    hr {
+      margin: 2rem 0 1rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.5rem;
+      text-align: right;
+      font-size: 0.9rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1.2rem 0;
+    }
+    .mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      font-size: 0.95rem;
+    }
+    .mini-table th {
+      background: #d4e3f0;
+      color: #124263;
+      font-weight: 500;
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+    }
+    .mini-table td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid #e9f0f6;
+    }
+    .mini-table tr:last-child td {
+      border-bottom: none;
+    }
+    .mini-table i {
+      color: #2b7aa2;
+      margin-right: 0.4rem;
+    }
+
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 1.9rem;
+        flex-wrap: wrap;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fas fa-cubes"></i> 
+    构建工具 · Vite 从零上手
+    <span style="font-size: 1rem; margin-left: auto; background: #d4e3f0; padding: 0.2rem 1.2rem; border-radius: 40px; font-weight: 400; color: #124263;">
+      <i class="fas fa-rocket"></i> 工程化
+    </span>
+  </h1>
+
+  <!-- 第一部分：遗留问题 & Node.js -->
+  <h2><i class="fas fa-tools"></i> 4.1 遗留问题 · 为什么需要构建工具</h2>
+  <div class="highlight-box">
+    <i class="fas fa-bug"></i> <strong>三大难受</strong>
+    <ul style="margin-top: 0.4rem;">
+      <li><i class="fas fa-eye-slash"></i> 想看一眼效果太麻烦 —— 模块化之后本地打不开，ES 模块必须走服务器</li>
+      <li><i class="fas fa-network-wired"></i> 打开页面十几条请求，光 CSS 就 8 个文件</li>
+      <li><i class="fas fa-database"></i> 改了 CSS 刷新没变，浏览器缓存坑人</li>
+    </ul>
+  </div>
+  <p><i class="fas fa-arrow-right" style="color:#2b7aa2;"></i> 有一类工具专门收拾这些——<strong>构建工具</strong>，最流行的叫 <span class="inline-code">Vite</span>（作者尤雨溪）。</p>
+
+  <h3><i class="fab fa-node-js"></i> 先装 Node.js · 让 JS 跑在电脑上</h3>
+  <p>Vite 是用 JavaScript 写的命令行工具，需要 <span class="inline-code">Node.js</span> 环境。类比：跑 .py 要装 Python，开 .xlsx 要装 Excel。</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> node -v   # 看到 v20.x.x 之类<br><i class="fas fa-terminal"></i> npm -v    # 看到 10.x.x 之类</div>
+  <p><i class="fas fa-info-circle" style="color:#2b7aa2;"></i> npm 随 Node 一起安装，<span class="inline-code">apt</span> 给整台电脑装，<span class="inline-code">npm</span> 默认给“当前这一个项目”装。</p>
+
+  <!-- 第二部分：初始化 & 安装 Vite -->
+  <h2><i class="fas fa-folder-open"></i> 初始化项目 · npm init =这个项目我要来管</h2>
+  <p>进入项目根目录（与 <span class="inline-code">index.html</span> 同级），运行：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> npm init -y</div>
+  <p>生成 <span class="inline-code">package.json</span> —— 项目的“npm 档案”。可以手动精简，只留 <span class="inline-code">name</span> 和 <span class="inline-code">version</span>：</p>
+  <div class="code-block" style="background: #0f222f;">{ "name": "zero-to-tech", "version": "1.0.0" }</div>
+
+  <h3><i class="fas fa-download"></i> 安装 Vite</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> npm install -D vite</div>
+  <ul>
+    <li><i class="fas fa-folder"></i> <span class="inline-code">node_modules/</span> 出现</li>
+    <li><i class="fas fa-file-alt"></i> <span class="inline-code">package.json</span> 多了 <span class="inline-code">devDependencies   -D的作用就是只是工具，不打包上线</span></li>
+    <li><i class="fas fa-lock"></i> <span class="inline-code">package-lock.json</span> 锁定版本</li>
+  </ul>
+  <div class="grid-2col">
+    <div class="grid-item"><i class="fas fa-folder-tree"></i> <span class="inline-code">node_modules/vite/</span> 代码本体</div>
+    <div class="grid-item"><i class="fas fa-terminal"></i> <span class="inline-code">node_modules/.bin/vite</span> 可执行命令</div>
+  </div>
+
+  <!-- 第三部分：dev / build / preview -->
+  <h2><i class="fas fa-play-circle"></i> 三条核心命令：dev · build · preview</h2>
+  <h3><i class="fas fa-laptop-code"></i> dev：随改随看</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> ./node_modules/.bin/vite</div>
+  <p>Vite 起本地服务器 <span class="inline-code">localhost:5173</span>，热更新，<strong>难受1</strong> 解决。</p>
+
+  <h3><i class="fas fa-boxes"></i> build：打包上线版本</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> ./node_modules/.bin/vite build</div>
+  <p>产出 <span class="inline-code">dist/</span>：</p>
+  <ul>
+    <li><i class="fas fa-file-code"></i> 8 个 CSS → 1 个（带 hash）</li>
+    <li><i class="fas fa-file-code"></i> 几个 JS 模块 → 1 个（带 hash）</li>
+  </ul>
+  <p><i class="fas fa-check-circle" style="color:#2b7aa2;"></i> <strong>难受2</strong>（请求太多）和 <strong>难受3</strong>（缓存坑）一并解决。</p>
+
+  <h3><i class="fas fa-eye"></i> preview：上线前本地预览一下 dist</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> ./node_modules/.bin/vite preview</div>
+  <p>这条命令就是起服务器专门伺服 <span class="inline-code">dist</span>，上线前自测。</p>
+
+  <div class="highlight-box">
+    <i class="fas fa-exclamation-triangle"></i> <strong>源代码 ≠ 运行的代码</strong><br>
+    你维护的是 <span class="inline-code">js/,css/</span> 源码，线上跑的是 <span class="inline-code">dist/</span>。永远改源码，然后 <span class="inline-code">build</span>，不要手动改dist, dist才是真正上线的。
+  </div>
+
+  <!-- 第四部分：npm run 别名 & .gitignore -->
+  <h2><i class="fas fa-edit"></i> 用 npm run 告别长命令</h2>
+  <p>在 <span class="inline-code">package.json</span> 的 <span class="inline-code">scripts</span> 中登记别名：</p>
+  <div class="code-block" style="background: #0f222f;">
+"scripts": {<br>
+  "dev": "vite",<br>
+  "build": "vite build",<br>
+  "preview": "vite preview"<br>
+}
+  </div>
+   <div class="highlight-box">
+    <p>npm run xxx 即执行 scripts 中的 xxx 命令，它会在 node_modules/.bin 里自动查找（如 vite），无需写路径。</p>
+
+    <p>apt 只管软件装卸，npm 不只是包管理器，还依据 package.json 充当项目命令的执行者。npm run dev 实际运行的是你自定义的 vite 命令，npm 只是照单执行。核心：命令是你的，npm 只是代劳。</p>
+    </div>
+  <div class="table-wrap">
+    <table class="mini-table">
+      <thead><tr><th>命令</th><th>作用</th><th>何时使用</th></tr></thead>
+      <tbody>
+        <tr><td><i class="fas fa-play"></i> npm run dev</td><td>起本地服务器，热更新</td><td>开发时全程</td></tr>
+        <tr><td><i class="fas fa-cube"></i> npm run build</td><td>打包成 dist/</td><td>上线前生成</td></tr>
+        <tr><td><i class="fas fa-search"></i> npm run preview</td><td>本地预览 dist</td><td>上线前自测</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><i class="fas fa-ban"></i> 在根目录新建.gitignore：忽略可重建的产物</h3>
+  <div class="code-block" style="background: #0f222f;">
+node_modules/<br>
+dist/
+  </div>
+  <p><i class="fas fa-undo-alt" style="color:#2b7aa2;"></i> 它们都可以通过 <span class="inline-code">npm install</span> 和 <span class="inline-code">npm run build</span> 重新生成，不必提交 Git。</p>
+
+  <!-- 第五部分：依赖管理 & anime -->
+  <h2><i class="fas fa-link"></i> 用 npm 管理依赖 · 告别 CDN</h2>
+  <p>之前 <span class="inline-code">cards.js</span> 里直接从 CDN 引 anime：</p>
+  <div class="code-block" style="background: #162b3a;">import { animate, stagger } from "cdn.jsdelivr.net/...";</div>
+  <p>现在装到本地：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> npm install animejs</div>
+  <p>回到card.js,score.js 然后修改 import：</p>
+  <div class="code-block" style="background: #162b3a;">import { animate, stagger } from "animejs";</div>
+  <p><i class="fas fa-check" style="color:#2b7aa2;"></i> Vite 会自动映射到 <span class="inline-code">node_modules</span>，不再依赖外网，版本锁在手里。</p>
+  <p>改完，再 npm run build 一次，此时 dist 里那个 js 已经不一样了——anime.js 也被打了进去</p>
+  <!-- 第六部分：总结 & 尾巴 -->
+  <h2><i class="fas fa-tasks"></i> 这节课你该理解什么</h2>
+  <ul>
+    <li><i class="fas fa-toolbox"></i> 构建工具（Vite）解决开发体验问题：本地服务器、合并文件、加 hash</li>
+    <li><i class="fas fa-cogs"></i> Node.js 是 JS 运行环境，npm 是“按项目管理”的应用商店</li>
+    <li><i class="fas fa-file-signature"></i> <span class="inline-code">package.json</span> 是项目档案，<span class="inline-code">scripts</span> 是命令别名表</li>
+    <li><i class="fas fa-code-branch"></i> 源码（你改）≠ 运行代码（dist），<span class="inline-code">node_modules</span> 和 <span class="inline-code">dist</span> 可重建，不提交 写进.gitignore</li>
+    <li><i class="fas fa-box"></i> <span class="inline-code">dependencies</span>（运行时库）vs <span class="inline-code">devDependencies</span>（开发工具）</li>
+  </ul>
+
+  <hr>
+
+  <!-- 留个尾巴：React 预告 -->
+  <div style="background: rgba(61,142,192,0.03); border-radius: 24px; padding: 1.2rem 1.6rem; border: 1px dashed #3d8ec0; margin-top: 1.2rem;">
+    <i class="fas fa-code-branch" style="color:#2b7aa2; margin-right: 0.6rem;"></i>
+    <strong>留个尾巴：复用还没解决</strong> —— 两个 HTML 页面共用导航，却各自写了一遍。下一节 <span class="inline-code">React</span> 将把多页面合成单页，组件复用，导航写一次处处可用。
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer-note">
+    <i class="fas fa-rocket"></i> 
+    <span>从零开始 · 工程化基础</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># Vite 笔记</span>
+  </div>
+
+</div>
+</body>
+</html>
