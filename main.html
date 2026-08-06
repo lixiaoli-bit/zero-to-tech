@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <title>前端工程化 · 部署学习笔记</title>
+  <!-- 字体与基础图标 (Font Awesome) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f6f9fe 0%, #eef3fa 100%);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      padding: 2.5rem 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #1a2639;
+    }
+
+    .container {
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* 头部区域 —— 毛玻璃质感 */
+    .hero {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(14px) saturate(180%);
+      -webkit-backdrop-filter: blur(14px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      padding: 2.2rem 2.8rem;
+      border-radius: 60px;
+      box-shadow: 0 18px 40px -12px rgba(0, 20, 40, 0.15), 0 4px 16px rgba(0,0,0,0.02);
+      margin-bottom: 3.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+
+    .hero-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-left .icon-emblem {
+      background: #1a2e4a;
+      color: white;
+      width: 56px;
+      height: 56px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 8px 16px -6px rgba(0,20,40,0.2);
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #0f1f32, #27496d);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.2;
+    }
+
+    .hero h1 small {
+      font-size: 1rem;
+      font-weight: 400;
+      background: rgba(26, 46, 74, 0.08);
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+      color: #1a2e4a;
+      margin-left: 12px;
+      letter-spacing: 0.3px;
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    .hero-tagline {
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(8px);
+      padding: 0.5rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 450;
+      color: #1f3a57;
+      border: 1px solid rgba(255,255,255,0.5);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hero-tagline i {
+      color: #2b5f8a;
+      font-size: 1rem;
+    }
+
+    /* 网格卡片 */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 0.5rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 40px;
+      padding: 1.8rem 1.8rem 2rem 1.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.02), 0 4px 12px rgba(0, 20, 40, 0.03);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.85);
+      border-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 28px 48px -16px rgba(0, 32, 64, 0.12), 0 8px 20px rgba(0, 0, 0, 0.02);
+    }
+
+    /* 卡片头部 */
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 0.9rem;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.02);
+      padding-bottom: 0.7rem;
+    }
+
+    .card-header .num-badge {
+      background: #0f1f32;
+      color: white;
+      font-weight: 600;
+      width: 34px;
+      height: 34px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(0,20,40,0.1);
+    }
+
+    .card-header h2 {
+      font-size: 1.4rem;
+      font-weight: 630;
+      letter-spacing: -0.3px;
+      color: #0b1e30;
+    }
+
+    .card-header .emoji-tag {
+      margin-left: auto;
+      font-size: 1.8rem;
+      line-height: 1;
+      opacity: 0.7;
+    }
+
+    /* 卡片内容 */
+    .card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .card-desc {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #1e3249;
+      margin: 0.3rem 0 0.2rem 0;
+      font-weight: 400;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: 0.3rem 0 0.8rem 0;
+      padding: 0;
+    }
+
+    .feature-list li {
+      padding: 0.25rem 0 0.25rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: #1f3a57;
+      border-bottom: 1px dashed rgba(0,0,0,0.03);
+    }
+
+    .feature-list li i {
+      color: #2b5f8a;
+      width: 18px;
+      font-size: 0.9rem;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .tag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0.6rem 0 1.2rem 0;
+    }
+
+    .tag {
+      background: rgba(26, 46, 74, 0.06);
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      color: #1a3a57;
+      border: 1px solid rgba(26, 46, 74, 0.05);
+      backdrop-filter: blur(4px);
+    }
+
+    .tag i {
+      margin-right: 4px;
+      font-size: 0.7rem;
+      opacity: 0.8;
+    }
+
+    .card-footer-link {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 0.8rem;
+      border-top: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #0f1f32;
+      color: white;
+      padding: 0.5rem 1.6rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      border: 1px solid transparent;
+      box-shadow: 0 4px 12px rgba(0,20,40,0.06);
+      /* 确保所有链接在新标签打开 */
+      target: _blank;
+    }
+
+    .btn-link i {
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+
+    .btn-link:hover {
+      background: #1a3550;
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px rgba(0, 20, 40, 0.12);
+    }
+
+    .btn-link:active {
+      transform: scale(0.97);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(15, 31, 50, 0.2);
+      color: #1a2e4a;
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: rgba(15, 31, 50, 0.04);
+      border-color: #0f1f32;
+    }
+
+    /* 底部装饰 */
+    .footer-note {
+      margin-top: 4rem;
+      text-align: center;
+      color: #3d5a78;
+      font-weight: 350;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      padding-top: 2rem;
+      backdrop-filter: blur(4px);
+      letter-spacing: 0.2px;
+    }
+
+    .footer-note span {
+      background: rgba(255,255,255,0.3);
+      padding: 0.2rem 1.6rem;
+      border-radius: 60px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* 响应式细腻调整 */
+    @media (max-width: 800px) {
+      .hero {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.2rem;
+        padding: 1.8rem;
+        border-radius: 40px;
+      }
+      .hero h1 {
+        font-size: 1.9rem;
+      }
+      .hero h1 small {
+        margin-left: 4px;
+        display: inline-block;
+        margin-top: 4px;
+      }
+      .hero-tagline {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 1.2rem 0.8rem; }
+      .hero { padding: 1.2rem; }
+      .hero h1 { font-size: 1.6rem; }
+      .card { padding: 1.2rem; }
+      .card-header h2 { font-size: 1.2rem; }
+      .btn-link { padding: 0.4rem 1.2rem; }
+    }
+
+    /* 自定义滚动 */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #dbe3ed; border-radius: 20px; }
+    ::-webkit-scrollbar-thumb { background: #8aa3c0; border-radius: 20px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6a85a5; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 头部 -->
+  <header class="hero">
+    <div class="hero-left">
+      <div class="icon-emblem"><i class="fas fa-code"></i></div>
+      <h1>
+        前端工程化·部署
+        <small>从零到上线</small>
+      </h1>
+    </div>
+    <div class="hero-tagline">
+      <i class="fas fa-book-open"></i> 学习笔记 · 四步进阶
+      <i class="fas fa-arrow-right" style="margin-left: 4px;"></i>
+      <span style="background: rgba(255,255,255,0.3); padding: 0 8px; border-radius: 30px;">🚀 完整链路</span>
+    </div>
+  </header>
+
+  <!-- 卡片网格 对应4个笔记 -->
+  <div class="grid">
+
+    <!-- 卡片 1: Linux / Vim / 服务器 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="num-badge">1</span>
+        <h2>Linux · Vim · 服务器</h2>
+        <span class="emoji-tag">🐧</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc"><i class="fas fa-terminal" style="margin-right: 8px; color:#2b5f8a;"></i>从零开始的服务器运维入门指南</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-folder"></i> Linux 基础目录结构</li>
+          <li><i class="fas fa-pen"></i> Vim 编辑器核心操作</li>
+          <li><i class="fas fa-key"></i> 云服务器 SSH 远程连接</li>
+          <li><i class="fas fa-globe"></i> Nginx 安装与配置</li>
+        </ul>
+        <div class="tag-group">
+          <span class="tag"><i class="fab fa-linux"></i> Linux</span>
+          <span class="tag"><i class="fas fa-edit"></i> Vim</span>
+          <span class="tag"><i class="fas fa-server"></i> Nginx</span>
+          <span class="tag"><i class="fas fa-cloud"></i> 服务器</span>
+        </div>
+        <div class="card-footer-link">
+          <!-- 添加 target="_blank" 和 rel="noopener" -->
+          <a href="./index.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+          <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 卡片 2: Git · 部署 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="num-badge">2</span>
+        <h2>Git · 服务器 · 部署</h2>
+        <span class="emoji-tag">📦</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc"><i class="fab fa-git-alt" style="margin-right: 8px; color:#d45d3a;"></i>版本控制与项目部署实战记录</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-code-branch"></i> Git 本地仓库初始化</li>
+          <li><i class="fab fa-github"></i> GitHub 远程关联 & SSH</li>
+          <li><i class="fas fa-cog"></i> 服务器 Nginx 站点配置</li>
+          <li><i class="fas fa-bug"></i> 权限调试与问题排查</li>
+        </ul>
+        <div class="tag-group">
+          <span class="tag"><i class="fab fa-git-alt"></i> Git</span>
+          <span class="tag"><i class="fab fa-github"></i> GitHub</span>
+          <span class="tag"><i class="fas fa-lock"></i> SSH</span>
+          <span class="tag"><i class="fas fa-rocket"></i> 部署</span>
+        </div>
+        <div class="card-footer-link">
+          <a href="./about.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+          <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 卡片 3: 模块化 · 工程化 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="num-badge">3</span>
+        <h2>模块化 · 工程化</h2>
+        <span class="emoji-tag">🧩</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc"><i class="fas fa-cubes" style="margin-right: 8px; color:#7c4d9e;"></i>深入理解前端工程化起点</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-code"></i> 传统 script vs ES Module</li>
+          <li><i class="fas fa-arrow-right-arrow-left"></i> import/export 解决全局污染</li>
+          <li><i class="fas fa-box"></i> 第三方库 (anime.js) 按需加载</li>
+          <li><i class="fas fa-layer-group"></i> 构建大型应用基础</li>
+        </ul>
+        <div class="tag-group">
+          <span class="tag"><i class="fas fa-code"></i> ES Module</span>
+          <span class="tag"><i class="fas fa-cube"></i> 模块化</span>
+          <span class="tag"><i class="fas fa-tools"></i> 工程化</span>
+          <span class="tag"><i class="fab fa-js"></i> JavaScript</span>
+        </div>
+        <div class="card-footer-link">
+          <a href="./mokuai.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+          <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 卡片 4: 构建工具 Vite -->
+    <div class="card">
+      <div class="card-header">
+        <span class="num-badge">4</span>
+        <h2>构建工具 · Vite</h2>
+        <span class="emoji-tag">⚡</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc"><i class="fas fa-bolt" style="margin-right: 8px; color:#d97706;"></i>工程化利器 —— Vite 使用指南</p>
+        <ul class="feature-list">
+          <li><i class="fab fa-node-js"></i> Node.js 环境搭建</li>
+          <li><i class="fas fa-boxes"></i> 项目初始化 & 依赖管理</li>
+          <li><i class="fas fa-terminal"></i> dev / build / preview 核心命令</li>
+          <li><i class="fas fa-forward"></i> 告别繁琐请求与缓存</li>
+        </ul>
+        <div class="tag-group">
+          <span class="tag"><i class="fas fa-bolt"></i> Vite</span>
+          <span class="tag"><i class="fas fa-hammer"></i> 构建工具</span>
+          <span class="tag"><i class="fab fa-node-js"></i> NodeJS</span>
+          <span class="tag"><i class="fas fa-cogs"></i> 工程化</span>
+        </div>
+        <div class="card-footer-link">
+          <a href="./goujian.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+          <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer-note">
+    <span><i class="fas fa-arrow-up" style="margin-right: 8px;"></i> 从 Linux 到 Vite · 完整学习路径 <i class="fas fa-arrow-up" style="margin-left: 8px;"></i></span>
+    <div style="margin-top: 1rem; opacity: 0.6; font-size: 0.8rem; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      <span><i class="fas fa-check-circle" style="color: #1d7e8c;"></i> 服务器基础</span>
+      <span><i class="fas fa-check-circle" style="color: #1d7e8c;"></i> Git 部署</span>
+      <span><i class="fas fa-check-circle" style="color: #1d7e8c;"></i> 模块化</span>
+      <span><i class="fas fa-check-circle" style="color: #1d7e8c;"></i> Vite 构建</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
