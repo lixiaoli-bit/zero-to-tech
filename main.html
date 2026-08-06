@@ -269,8 +269,6 @@
       transition: 0.15s;
       border: 1px solid transparent;
       box-shadow: 0 4px 12px rgba(0,20,40,0.06);
-      /* 确保所有链接在新标签打开 */
-      target: _blank;
     }
 
     .btn-link i {
@@ -373,13 +371,13 @@
       </h1>
     </div>
     <div class="hero-tagline">
-      <i class="fas fa-book-open"></i> 学习笔记 · 四步进阶
+      <i class="fas fa-book-open"></i> 学习笔记 · 六步进阶
       <i class="fas fa-arrow-right" style="margin-left: 4px;"></i>
       <span style="background: rgba(255,255,255,0.3); padding: 0 8px; border-radius: 30px;">🚀 完整链路</span>
     </div>
   </header>
 
-  <!-- 卡片网格 对应4个笔记 -->
+  <!-- 卡片网格 6个笔记 -->
   <div class="grid">
 
     <!-- 卡片 1: Linux / Vim / 服务器 -->
@@ -404,7 +402,6 @@
           <span class="tag"><i class="fas fa-cloud"></i> 服务器</span>
         </div>
         <div class="card-footer-link">
-          <!-- 添加 target="_blank" 和 rel="noopener" -->
           <a href="./index.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
           <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
         </div>
@@ -495,16 +492,74 @@
       </div>
     </div>
 
+    <!-- 卡片 5: React · 组件 (来自 reactdemo.html) -->
+    <div class="card">
+      <div class="card-header">
+        <span class="num-badge">5</span>
+        <h2>React · 组件</h2>
+        <span class="emoji-tag">⚛️</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc"><i class="fab fa-react" style="margin-right: 8px; color:#61dafb;"></i>组件化思维 · 从积木到页面</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-puzzle-piece"></i> 组件封装：数据 + 结构 + 样式 + 行为</li>
+          <li><i class="fas fa-sitemap"></i> 组件嵌套：小组件拼成大组件</li>
+          <li><i class="fas fa-code"></i> JSX 与 React 项目骨架</li>
+          <li><i class="fas fa-rocket"></i> 用 Vite 初始化 React 项目</li>
+        </ul>
+        <div class="tag-group">
+          <span class="tag"><i class="fab fa-react"></i> React</span>
+          <span class="tag"><i class="fas fa-cube"></i> 组件</span>
+          <span class="tag"><i class="fas fa-code"></i> JSX</span>
+          <span class="tag"><i class="fas fa-tools"></i> Vite</span>
+        </div>
+        <div class="card-footer-link">
+          <a href="./reactdemo.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+          <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 卡片 6: 数据驱动 · 部署 (来自 reactdemo2.html) -->
+    <div class="card">
+      <div class="card-header">
+        <span class="num-badge">6</span>
+        <h2>数据驱动 · 部署</h2>
+        <span class="emoji-tag">📊</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc"><i class="fas fa-code-branch" style="margin-right: 8px; color:#2b7aa2;"></i>数据驱动界面 · 从组件到公网</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-database"></i> 数据驱动：值变界面自动跟</li>
+          <li><i class="fas fa-route"></i> 路由与状态管理</li>
+          <li><i class="fab fa-node-js"></i> 服务器安装 Node & 构建</li>
+          <li><i class="fas fa-globe"></i> Nginx 指向 dist/ 部署上线</li>
+        </ul>
+        <div class="tag-group">
+          <span class="tag"><i class="fas fa-database"></i> 数据驱动</span>
+          <span class="tag"><i class="fas fa-route"></i> 路由</span>
+          <span class="tag"><i class="fas fa-server"></i> 部署</span>
+          <span class="tag"><i class="fab fa-node-js"></i> Node</span>
+        </div>
+        <div class="card-footer-link">
+          <a href="./reactdemo2.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+          <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- 底部 -->
   <div class="footer-note">
-    <span><i class="fas fa-arrow-up" style="margin-right: 8px;"></i> 从 Linux 到 Vite · 完整学习路径 <i class="fas fa-arrow-up" style="margin-left: 8px;"></i></span>
+    <span><i class="fas fa-arrow-up" style="margin-right: 8px;"></i> 从 Linux 到 React · 完整学习路径 <i class="fas fa-arrow-up" style="margin-left: 8px;"></i></span>
     <div style="margin-top: 1rem; opacity: 0.6; font-size: 0.8rem; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
       <span><i class="fas fa-check-circle" style="color: #1d7e8c;"></i> 服务器基础</span>
       <span><i class="fas fa-check-circle" style="color: #1d7e8c;"></i> Git 部署</span>
       <span><i class="fas fa-check-circle" style="color: #1d7e8c;"></i> 模块化</span>
       <span><i class="fas fa-check-circle" style="color: #1d7e8c;"></i> Vite 构建</span>
+      <span><i class="fas fa-check-circle" style="color: #1d7e8c;"></i> React 组件</span>
+      <span><i class="fas fa-check-circle" style="color: #1d7e8c;"></i> 数据驱动</span>
     </div>
   </div>
 

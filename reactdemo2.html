@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据驱动界面 · 部署笔记 · 美化版</title>
+  <!-- Font Awesome 6 (免费图标库) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f4f8fc 0%, #e6eef5 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 44px;
+      padding: 2.8rem 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0,20,30,0.25),
+                  0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 4px solid #1f6390;
+      padding-bottom: 0.7rem;
+      margin-bottom: 2.2rem;
+      color: #0a293f;
+      flex-wrap: wrap;
+    }
+
+    h1 i {
+      color: #1f6390;
+      font-size: 2.4rem;
+    }
+
+    .badge-header {
+      font-size: 1rem;
+      margin-left: auto;
+      background: #d2e3f0;
+      padding: 0.25rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 400;
+      color: #124263;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 500;
+      margin-top: 2.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1a4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1.2rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.07), transparent);
+      border-radius: 0 14px 14px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.6rem;
+      width: 2.2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 1.8rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1d4b6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.3rem;
+      width: 2rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.4rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), 0 6px 14px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1.1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.8rem;
+      text-align: center;
+      margin-right: 0.2rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 22px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    hr {
+      margin: 2.2rem 0 1.2rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 0.95rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: #1f6390;
+      color: white;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 1rem;
+      margin-right: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .quote {
+      background: #eef5fa;
+      border-radius: 20px;
+      padding: 1rem 1.8rem;
+      margin: 1rem 0;
+      border-left: 6px solid #4f9bc9;
+      font-style: italic;
+      color: #1a4058;
+    }
+
+    .quote i {
+      color: #3d8ec0;
+      margin-right: 0.5rem;
+    }
+
+    /* 小屏优化 */
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+      .badge-header {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fas fa-code-branch"></i> 
+    数据驱动 · 部署笔记
+    <span class="badge-header"><i class="fas fa-cloud-upload-alt"></i> 从组件到公网</span>
+  </h1>
+
+  <!-- ===== 第一部分：数据驱动界面 ===== -->
+  <h2><i class="fas fa-database"></i> 数据驱动界面</h2>
+  <div class="quote">
+    <i class="fas fa-quote-left"></i> 界面长什么样，不写死在组件里，而是照着“喂进去的值”显示。喂的值变了，显示就变。
+  </div>
+  <p><i class="fas fa-folder-open" style="color:#2b7aa2;"></i> 如果用这个视角来看，那么 App 又何尝不是在照着一个“值”决定显示哪一页呢？只不过这个值的来路不太一样。</p>
+
+  <h3><i class="fas fa-download"></i> 下载 demo & 运行</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> git clone github.com... <br> cd zero-to-tech-demos/zero-to-tech-4-4 <br> npm install <br> npm run dev</div>
+
+  <h3><i class="fas fa-eye"></i> 现象：最直接</h3>
+  <ul>
+    <li><i class="fas fa-edit"></i> 打开 <span class="inline-code">src/data/site.js</span>，把 <span class="inline-code">heroTitle</span> 改成别的字，保存——页面上的大标题当场就变了。组件代码 <span class="inline-code">HomePage.jsx</span> 和 <span class="inline-code">PageHeading.jsx</span> 一个字都没碰。</li>
+    <li><i class="fas fa-font"></i> 打开 demo 的“文字实验室”那页，盯住输入框下面那行“已输入 N 字”——往框里多敲几个字、删几个，那行数字当场跟着跳。</li>
+  </ul>
+  <div class="highlight-box">
+    <i class="fas fa-lightbulb"></i> 你只要认得这个现象：<strong>有的值会变，界面会自动跟着它走。</strong>
+  </div>
+
+  <h3><i class="fas fa-code"></i> 升级我们的项目</h3>
+  <ul>
+    <li><i class="fas fa-file-code"></i> <span class="inline-code">src/data/site.js</span> （新增——那张内容表）</li>
+    <li><i class="fas fa-route"></i> <span class="inline-code">src/router/useRoute.js</span> （新增——盯网址的小路由）</li>
+  </ul>
+
+  <!-- ===== 部署到公网 ===== -->
+  <h2><i class="fas fa-server"></i> 把它发布到公网</h2>
+
+  <h3><i class="fab fa-node-js"></i> 第一步：给服务器装 Node</h3>
+  <p>SSH 远程登录上去，然后执行下面的命令（来自 Node.js 官网提供的在 Linux 安装 Node.js 的命令）：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> # 下载并安装 nvm：<br> curl -o- raw.githubusercontent.com... | bash <br> # 代替重启 shell <br> \. "$HOME/.nvm/nvm.sh" <br> # 下载并安装 Node.js：<br> nvm install 24 <br> # 验证 Node.js 版本：<br> node -v <span style="color: #8fcbff;"># Should print "v24.17.0".</span> <br> npm -v <span style="color: #8fcbff;"># Should print "11.13.0".</span></div>
+
+  <h3><i class="fas fa-upload"></i> 第二步：推代码、拉代码</h3>
+  <p>本地 <span class="inline-code">git push</span>；服务器上把代码拉下来：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> cd ~/zero-to-tech <br> git pull</div>
+
+  <h3><i class="fas fa-cubes"></i> 第三步：在服务器上安装依赖并 build</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> cd ~/zero-to-tech <br> npm install <br> npm run build</div>
+  <p>build 完，项目里多了个 <span class="inline-code">dist/</span> —— 这就是要交给 Nginx 的那一坨，跟 4.1 那堆手写 html 同性质：都是浏览器能直接跑的死文件。</p>
+  <div class="code-block" style="background: #0f222f;"><i class="fas fa-folder"></i> dist/ <br> ├── index.html             ← 页面外壳 <br> └── assets/ <br>     ├── index-[hash].js   ← 打包压缩过的 JS <br>     └── index-[hash].css  ← 打包压缩过的 CSS</div>
+
+  <h3><i class="fas fa-arrow-right"></i> 第四步：让 Nginx 指向 dist/</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> sudo vim /etc/nginx/sites-enabled/default</div>
+  <div class="code-block" style="background: #0f222f;">server { <br>   listen 80 default_server; <br>   server_name _; <br>   root /home/ubuntu/zero-to-tech/dist;   <span style="color: #8fcbff;"># ← 指向 build 产物</span> <br>   index index.html; <br> }</div>
+  <p>和 4.1 那一节相比，实质就改了一处：root 从手写 html 的目录 → 指向 <span class="inline-code">dist/</span>。</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> sudo nginx -t <br> sudo systemctl reload nginx</div>
+
+  <h3><i class="fas fa-globe"></i> 见证一下</h3>
+  <p>浏览器打开 <span class="inline-code">http://你的公网IP</span>，页面就出来了！</p>
+  <div class="highlight-box">
+    <i class="fas fa-sync-alt"></i> 以后每次改完代码：<br>
+    <span class="inline-code">本地 git push</span> → <span class="inline-code">服务器 git pull</span> → <span class="inline-code">npm install</span> → <span class="inline-code">npm run build</span>。跟 4.1 比，工程化项目不再是“拉下来就能直接给 Nginx”，中间多了一个准备依赖、再构建产物的过程——这就是“工程化项目”要付的成本，换来的是组件复用、构建优化那些好处。
+  </div>
+
+  <!-- ===== 核心概念回顾 ===== -->
+  <h2><i class="fas fa-brain"></i> 核心概念回顾</h2>
+  <p>界面，说到底就是照着一些“值”在显示。这一节，我们见识了这些“值”的三种玩法：</p>
+
+  <div class="grid-2col">
+    <div class="grid-item"><i class="fas fa-inbox"></i> <strong>值能从外面喂进去，还能集中起来管。</strong><br> 组件空出一个位置，使用它的时候喂它什么、它就显示什么；而要显示的内容，可以集中记在一个文件里——改文案、加作品，只动这个文件，组件一个字不用碰。<br><span style="color:#1f6390; font-size:0.9rem;">（props ＋ 数据分离）</span></div>
+    <div class="grid-item"><i class="fas fa-undo-alt"></i> <strong>值能自己变，界面自动跟。</strong><br> 组件可以有一些自己控制的值，当用户与组件交互（打字、点一下），组件自己揣着的那个值就变——它一变，界面当场跟着变。<br><span style="color:#1f6390; font-size:0.9rem;">（state）</span></div>
+    <div class="grid-item"><i class="fas fa-link"></i> <strong>值还能存进网址里。</strong><br> 把“现在在哪一页”写进 URL，于是刷新不丢、链接能发、前进后退都好使。<br><span style="color:#1f6390; font-size:0.9rem;">（路由）</span></div>
+    <div class="grid-item"><i class="fas fa-rocket"></i> <strong>发布到公网。</strong><br> push 源码、服务器 npm install 准备依赖、npm run build 生成 dist/，再让 Nginx 指向 dist/。与 4.1 的发布流程相比，关键变化是：Nginx 服务的不再是源码目录，而是服务器上装好依赖后构建出来的产物。</div>
+  </div>
+
+  <div class="quote">
+    <i class="fas fa-arrow-right"></i> 下一节，我们再细看这个刚上线的网站，并且我们要在下一节正式请 Next.js 出场。
+  </div>
+
+  <!-- 底部 -->
+  <hr>
+  <div class="footer-note">
+    <i class="fas fa-rocket"></i> 
+    <span>数据驱动 · 部署笔记</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># 组件 · 数据 · 部署</span>
+    <i class="fas fa-terminal" style="margin-left: 0.5rem;"></i>
+  </div>
+
+</div>
+</body>
+</html>
