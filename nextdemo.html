@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Next.js · 框架代价 · 预渲染 · 部署笔记</title>
+  <!-- Font Awesome 6 (免费图标库) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f2f7fc 0%, #e2ebf3 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #0f283b;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 44px;
+      padding: 2.8rem 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0,20,30,0.25),
+                  0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 4px solid #1f6390;
+      padding-bottom: 0.7rem;
+      margin-bottom: 2.2rem;
+      color: #0a293f;
+      flex-wrap: wrap;
+    }
+
+    h1 i {
+      color: #1f6390;
+      font-size: 2.4rem;
+    }
+
+    .badge-header {
+      font-size: 1rem;
+      margin-left: auto;
+      background: #d2e3f0;
+      padding: 0.25rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 400;
+      color: #124263;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 500;
+      margin-top: 2.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1a4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1.2rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.07), transparent);
+      border-radius: 0 14px 14px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.6rem;
+      width: 2.2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 1.8rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1d4b6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.3rem;
+      width: 2rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.4rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), 0 6px 14px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1.1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.8rem;
+      text-align: center;
+      margin-right: 0.2rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 22px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    hr {
+      margin: 2.2rem 0 1.2rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 0.95rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: #1f6390;
+      color: white;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 1rem;
+      margin-right: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .file-tree {
+      background: #10222e;
+      color: #d6e8f5;
+      padding: 1rem 1.8rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      margin: 0.8rem 0 1.2rem 0;
+      border: 1px solid #2b4b64;
+    }
+    .file-tree i {
+      color: #8fcbff;
+      width: 1.6rem;
+    }
+
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+      .badge-header {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fas fa-code-branch"></i> 
+    Next.js · 框架代价 · 预渲染
+    <span class="badge-header"><i class="fas fa-rocket"></i> 从 React 到生产级</span>
+  </h1>
+
+  <!-- ===== 第一部分：框架的代价 ===== -->
+  <h2><i class="fas fa-cubes"></i> 第一部分 · 框架的代价</h2>
+  <p><i class="fas fa-arrow-right" style="color:#2b7aa2;"></i> React 是一套规则，借助 Vite 翻译成 html/css/js。但最终浏览器拿到的是空壳 index.html + JS 包，页面是 JS 现画的。</p>
+  <div class="highlight-box">
+    <i class="fas fa-bolt"></i> <strong>三个问题，同一个病根</strong>：404、白屏、SEO 差 —— 都是因为页面不是真实文件，而是浏览器临时算出来的。
+  </div>
+  <p><i class="fas fa-check-circle" style="color:#1f7a3d;"></i> 根治方案：提前把每一页“画好”，存成真实 HTML 文件。Next.js 就是替我们做这件事的框架。</p>
+
+  <h3><i class="fas fa-question-circle"></i> Next.js 是什么</h3>
+  <p>Next.js 是 React 之上的生产级框架。React 管组件，Next 管“组件之外、与整个 web 应用相关、上线必须的事”：路由、SEO、首屏快。</p>
+  <div class="highlight-box">
+    <i class="fas fa-merge"></i> 二者不是二选一，而是叠加。Next 真正解决两件事：<br>
+    <span class="inline-code"><i class="fas fa-route"></i> 路由</span> —— 哪个网址显示哪一页，告别手搓判断；<br>
+    <span class="inline-code"><i class="fas fa-file-code"></i> 预渲染</span> —— 把页面渲染成真实 HTML，一次解决 404/白屏/SEO。
+  </div>
+  <p><i class="fas fa-tools"></i> Next 自带构建工具，不再用 Vite。但 <span class="inline-code">dev / build</span> 概念不变，只是执行者换了。</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> cd zero-to-tech-4-5 <br> npm install <br> npm run dev</div>
+
+  <!-- ===== 第二部分：目录结构 ===== -->
+  <h2><i class="fas fa-folder-tree"></i> 第二部分 · 文件夹即路由</h2>
+  <div class="file-tree">
+    <i class="fas fa-folder"></i> zero-to-tech-4-5/<br>
+    <i class="fas fa-folder-open"></i> app/   ← Next.js 的“页面区”<br>
+    &nbsp;&nbsp;<i class="fas fa-file-code"></i> layout.jsx   ← 全站外壳<br>
+    &nbsp;&nbsp;<i class="fas fa-file-code"></i> page.jsx     ← / 这一页<br>
+    &nbsp;&nbsp;<i class="fas fa-folder"></i> text-lab/<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-file-code"></i> page.jsx   ← /text-lab 这一页<br>
+    <i class="fas fa-folder"></i> components/  (Nav, HomeView, TextLabView, AnimatedCardGrid...)<br>
+    <i class="fas fa-folder"></i> data/  (site.js 一字未改)
+  </div>
+  <p><i class="fas fa-link"></i> <strong>文件夹 = 路由</strong>：<span class="inline-code">app/page.jsx</span> → <span class="inline-code">/</span> ，<span class="inline-code">app/text-lab/page.jsx</span> → <span class="inline-code">/text-lab</span>。不用注册路由表，新建页面只需创建对应文件夹。</p>
+  <div class="code-block"><i class="fas fa-file-code"></i> app/text-lab/page.jsx (仅5行)<br>import TextLabView from "../../components/TextLabView.jsx"; <br>export default function Page() { return &lt;TextLabView /&gt;; }</div>
+  <p><i class="fas fa-arrow-right"></i> 它的全部工作就是说“/text-lab 这个 URL 渲染 TextLabView 这个组件”，监听 URL、刷新不丢、前进后退 —— Next 全包了。</p>
+
+  <!-- ===== 第三部分：客户端/服务端组件 ===== -->
+  <h2><i class="fas fa-cloud-sun"></i> 第三部分 · use client 开关</h2>
+  <p>组件文件顶上的 <span class="inline-code">"use client"</span> 决定渲染位置：</p>
+  <ul>
+    <li><i class="fas fa-server"></i> <strong>默认（无 "use client"）</strong>：服务端组件，在 build 时渲染成 HTML，首屏快、SEO 友好。</li>
+    <li><i class="fas fa-desktop"></i> <strong>有 "use client"</strong>：客户端组件，带交互/动画（useState、useEffect、usePathname 等），会额外发送 JS 到浏览器。</li>
+  </ul>
+  <div class="grid-2col">
+    <div class="grid-item"><i class="fas fa-pen"></i> <strong>有 "use client"</strong><br>Nav.jsx, InputCard.jsx, ResultCard.jsx, AnimatedCardGrid.jsx <br> <span style="font-size:0.9rem;">(导航高亮、打字计数、动画)</span></div>
+    <div class="grid-item"><i class="fas fa-eye"></i> <strong>无 "use client"</strong><br>HomeView.jsx, TextLabView.jsx, PageHeading.jsx, page.jsx <br> <span style="font-size:0.9rem;">(纯展示，无交互)</span></div>
+  </div>
+
+  <h3><i class="fas fa-hammer"></i> 构建：npm run build</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> npm run build</div>
+  <p>输出末尾显示 <span class="inline-code">○ (Static) prerendered as static content</span>，且 <span class="inline-code">.next/server/app/</span> 下出现真实的 <span class="inline-code">index.html</span> 和 <span class="inline-code">text-lab.html</span>。</p>
+  <div class="highlight-box">
+    <i class="fas fa-file"></i> 现在 <span class="inline-code">/text-lab</span> 有了真实文件，404 病根解除。首屏快、SEO 收录，都是同一件事。
+  </div>
+  <p><i class="fas fa-info-circle"></i> 注意：<span class="inline-code">.next/server/app/</span> 产物与 Vite 的 <span class="inline-code">dist/</span> 不同，不能直接丢给 Nginx 静态部署，下一节讲。</p>
+
+  <!-- ===== 第四部分：迁移与新建 ===== -->
+  <h2><i class="fas fa-arrows-left-right"></i> 第四部分 · 迁移 & 从零新建</h2>
+  <h3><i class="fas fa-copy"></i> 把已有项目搬成 Next</h3>
+  <ul>
+    <li><i class="fas fa-trash-alt"></i> 删除 ~/zero-to-tech 下所有文件（保留 .git）</li>
+    <li><i class="fas fa-copy"></i> 把 zero-to-tech-4-5/ 全部拷入</li>
+    <li><i class="fas fa-terminal"></i> npm install && npm run dev</li>
+  </ul>
+  <p><i class="fas fa-git-alt"></i> 保留 .git 是为了连接 GitHub 和提交历史。最后 git add / commit / push。</p>
+  <h3><i class="fas fa-plus-circle"></i> 从 0 新建 Next 项目</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> npm create next-app@latest</div>
+
+  <!-- ===== 核心概念回顾 ===== -->
+  <h2><i class="fas fa-brain"></i> 核心概念回顾</h2>
+  <ul>
+    <li><i class="fas fa-folder-open"></i> <strong>文件夹 = 路由</strong>：app/text-lab/page.jsx → /text-lab，无需配置。</li>
+    <li><i class="fas fa-link"></i> <strong>跳转交给框架</strong>：&lt;Link href="..."&gt; 接管路由，App.jsx + useRoute.js 消失。</li>
+    <li><i class="fas fa-file-code"></i> <strong>预渲染成真实 HTML</strong>：npm run build 输出真实文件，首屏快、SEO 友好。</li>
+  </ul>
+  <div class="highlight-box">
+    <i class="fas fa-flag-checkered"></i> 下一节：将 Next 项目部署到 Ubuntu 云主机，用 Nginx 指向。
+  </div>
+
+  
+  <!-- 底部 -->
+  <hr>
+  <div class="footer-note">
+    <i class="fas fa-rocket"></i> 
+    <span>Next.js · 从框架代价到部署上线</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># 预渲染 · 路由 · 服务端组件</span>
+    <i class="fas fa-terminal" style="margin-left: 0.5rem;"></i>
+  </div>
+
+</div>
+</body>
+</html>
