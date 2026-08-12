@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTTP · API · 手搓笔记 · 美化版</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f4f8fc 0%, #e6eef5 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 44px;
+      padding: 2.8rem 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0,20,30,0.25), 0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 4px solid #1f6390;
+      padding-bottom: 0.7rem;
+      margin-bottom: 2.2rem;
+      color: #0a293f;
+      flex-wrap: wrap;
+    }
+
+    h1 i {
+      color: #1f6390;
+      font-size: 2.4rem;
+    }
+
+    .badge-header {
+      font-size: 1rem;
+      margin-left: auto;
+      background: #d2e3f0;
+      padding: 0.25rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 400;
+      color: #124263;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 500;
+      margin-top: 2.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1a4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1.2rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.07), transparent);
+      border-radius: 0 14px 14px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.6rem;
+      width: 2.2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 1.8rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1d4b6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.3rem;
+      width: 2rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.4rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), 0 6px 14px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1.1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.8rem;
+      text-align: center;
+      margin-right: 0.2rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 22px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    hr {
+      margin: 2.2rem 0 1.2rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 0.95rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: #1f6390;
+      color: white;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 1rem;
+      margin-right: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* ---------- 并排头卡片 (内嵌) ---------- */
+    .pair-card {
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(2px);
+      border-radius: 28px;
+      padding: 1.2rem 1.6rem 1.6rem;
+      box-shadow: 0 6px 16px -8px rgba(0,20,30,0.08);
+      border: 1px solid rgba(255,255,255,0.9);
+    }
+
+    .pair-card h3 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: #1a4b6e;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #3d8ec0;
+      padding-left: 0.8rem;
+      margin-top: 0;
+    }
+
+    .pair-card h3 i {
+      color: #3d8ec0;
+      font-size: 1.2rem;
+    }
+
+    .pair-card .badge-meta {
+      display: inline-block;
+      background: #d2e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 0.9rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #124263;
+      margin-left: 0.3rem;
+    }
+
+    .head-item {
+      display: flex;
+      align-items: baseline;
+      padding: 0.35rem 0;
+      border-bottom: 1px dashed rgba(61,142,192,0.15);
+    }
+    .head-item:last-child {
+      border-bottom: none;
+    }
+
+    .head-key {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-weight: 600;
+      color: #0b344f;
+      background: #eaf0f6;
+      padding: 0.1rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      min-width: 100px;
+      display: inline-block;
+      border: 1px solid #cbdae6;
+      text-align: center;
+      margin-right: 0.8rem;
+    }
+
+    .head-desc {
+      color: #1f3f57;
+      font-size: 0.95rem;
+    }
+    .head-desc i {
+      color: #2b7aa2;
+      margin-right: 0.3rem;
+      width: 1.2rem;
+      text-align: center;
+    }
+
+    .pair-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 1.2rem 0 0.5rem;
+    }
+
+    .footnote-pair {
+      margin-top: 1.2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.2rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .footnote-pair i {
+      color: #3d8ec0;
+    }
+
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .grid-2col, .pair-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+      .badge-header {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.3rem;
+      }
+      .head-key {
+        min-width: 80px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fas fa-code-branch"></i>
+    HTTP · API · 手搓笔记
+    <span class="badge-header"><i class="fas fa-cloud-upload-alt"></i> 从调用方到服务方</span>
+  </h1>
+
+  <!-- ===== 1. 引言 ===== -->
+  <h2><i class="fas fa-network-wired"></i> API 与 HTTP</h2>
+  <p><i class="fas fa-arrow-right" style="color:#2b7aa2;"></i> 上一节我们安装了 Python，这一节我们用 Python 手搓一个 API。</p>
+  <div class="highlight-box">
+    <i class="fas fa-lightbulb"></i> <strong>核心关系：</strong> API 是程序对外提供能力的入口，而 HTTP 是这套入口上的对话协议。浏览器加载网页、curl 调接口，走的都是 HTTP。
+  </div>
+
+  <h3><i class="fas fa-exchange-alt"></i> HTTP 一去一回：请求和响应</h3>
+  <div class="code-block" style="background: #0f222f;">
+    请求（去）                 响应（回）
+    ├─ 请求行                 ├─ 状态行
+    ├─ 请求头（若干行）         ├─ 响应头（若干行）
+    ├─ （一个空行）            ├─ （一个空行）
+    └─ 请求体                 └─ 响应体
+  </div>
+  <ul>
+    <li><i class="fas fa-arrow-right"></i> 请求：<span class="inline-code">请求行 + 头 + 空行 + 体</span></li>
+    <li><i class="fas fa-arrow-left"></i> 响应：<span class="inline-code">状态行 + 头 + 空行 + 体</span></li>
+    <li><i class="fas fa-circle-check"></i> 全是纯文本，格式对称</li>
+  </ul>
+
+  <!-- ===== 2. curl -v 验证 ===== -->
+  <h2><i class="fas fa-terminal"></i> curl -v 验证报文</h2>
+  <p><i class="fas fa-eye"></i> <span class="inline-code">curl -v</span> 能把请求原文、响应原文全亮出来。</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> curl -v 'https://api.ipify.org?format=json'   win不可以</div>
+  <div class="code-block"><i class="fas fa-terminal"></i> curl -v https://ifconfig.me    win可以</div>
+  <ul>
+    <li><i class="fas fa-asterisk" style="color:#d99f2b;"></i> <span class="inline-code">*</span> 开头：curl 旁白</li>
+    <li><i class="fas fa-greater-than"></i> <span class="inline-code">&gt;</span> 开头：发出去的请求原文</li>
+    <li><i class="fas fa-less-than"></i> <span class="inline-code">&lt;</span> 开头：收到的响应原文</li>
+  </ul>
+  <div class="highlight-box">
+    <i class="fas fa-bullseye"></i> <strong>理论一一对应：</strong> 请求行、头、空行、体 — 逐行可指认。
+  </div>
+
+  <!-- ===== 3. 方法、头 ===== -->
+  <h2><i class="fas fa-list-ul"></i> 常见方法 · 常见头</h2>
+  <div class="grid-2col">
+    <div class="grid-item"><i class="fas fa-get"></i> <strong>GET</strong> “把某样东西给我”</div>
+    <div class="grid-item"><i class="fas fa-post"></i> <strong>POST</strong> “我提交一段内容，请你处理”</div>
+    <div class="grid-item"><i class="fas fa-put"></i> <strong>PUT</strong> 整个换掉</div>
+    <div class="grid-item"><i class="fas fa-patch"></i> <strong>PATCH</strong> 改一部分</div>
+    <div class="grid-item"><i class="fas fa-delete"></i> <strong>DELETE</strong> 删除</div>
+    <div class="grid-item"><i class="fas fa-head"></i> <strong>HEAD</strong> 只要头不要体</div>
+  </div>
+
+  
+   <!-- ===== 并排请求头 / 响应头 ===== -->
+  <div class="pair-grid">
+    <!-- 请求头 -->
+    <div class="pair-card">
+      <h3><i class="fas fa-arrow-up"></i> 请求头 <span class="badge-meta">Request</span></h3>
+      <div class="head-item"><span class="head-key">Host</span><span class="head-desc"><i class="fas fa-server"></i> 我要找哪台服务器</span></div>
+      <div class="head-item"><span class="head-key">User-Agent</span><span class="head-desc"><i class="fas fa-user"></i> 我是谁（工具 / 浏览器）</span></div>
+      <div class="head-item"><span class="head-key">Accept</span><span class="head-desc"><i class="fas fa-check-circle"></i> 我能接受什么格式</span></div>
+      <div class="head-item"><span class="head-key">Accept-Language</span><span class="head-desc"><i class="fas fa-language"></i> 我偏好什么语言</span></div>
+      <div class="head-item"><span class="head-key">Content-Type</span><span class="head-desc"><i class="fas fa-file-alt"></i> 我提交的请求体是什么格式</span></div>
+      <div class="head-item"><span class="head-key">Content-Length</span><span class="head-desc"><i class="fas fa-ruler"></i> 请求体有多长</span></div>
+      <div class="head-item"><span class="head-key">Authorization</span><span class="head-desc"><i class="fas fa-key"></i> 身份凭证（Bearer sk-…）</span></div>
+      <div class="head-item"><span class="head-key">Cookie</span><span class="head-desc"><i class="fas fa-cookie"></i> 随身带的“小纸条”</span></div>
+    </div>
+
+    <!-- 响应头 -->
+    <div class="pair-card">
+      <h3><i class="fas fa-arrow-down"></i> 响应头 <span class="badge-meta">Response</span></h3>
+      <div class="head-item"><span class="head-key">Content-Type</span><span class="head-desc"><i class="fas fa-file-code"></i> 我回的体是什么格式 <span style="color:#2b7aa2; font-weight:500;">（本节主角）</span></span></div>
+      <div class="head-item"><span class="head-key">Content-Length</span><span class="head-desc"><i class="fas fa-ruler"></i> 我回的体有多长</span></div>
+      <div class="head-item"><span class="head-key">Server</span><span class="head-desc"><i class="fas fa-server"></i> 我是什么服务器软件</span></div>
+      <div class="head-item"><span class="head-key">Date</span><span class="head-desc"><i class="fas fa-calendar-day"></i> 什么时间处理的</span></div>
+      <div class="head-item"><span class="head-key">Cache-Control</span><span class="head-desc"><i class="fas fa-boxes"></i> 缓存策略（能存多久）</span></div>
+      <div class="head-item"><span class="head-key">Set-Cookie</span><span class="head-desc"><i class="fas fa-cookie-bite"></i> 发一张“小纸条”，下次记得带上</span></div>
+      <div class="head-item"><span class="head-key">Location</span><span class="head-desc"><i class="fas fa-location-dot"></i> 内容搬家了，去这个新地址找（配合 3xx）</span></div>
+      <div class="head-item"><span class="head-key">Access-Control-Allow-Origin</span><span class="head-desc"><i class="fas fa-globe"></i> 允许哪些来源的网页调用我</span></div>
+    </div>
+  </div>
+  <div class="footnote-pair">
+    <span><i class="fas fa-arrow-right"></i> 请求头是调用方的自我交代</span>
+    <span><i class="fas fa-arrow-left"></i> 响应头是服务方对内容的交代</span>
+    <span><i class="fas fa-list-check"></i> 日常开发了解这些足够，陌生头查再用</span>
+  </div>
+  <!-- ===== 4. 手搓 API ===== -->
+  <h2><i class="fas fa-hand-sparkles"></i> 手搓 API · 用 Python 实现规范</h2>
+  <p><i class="fas fa-folder-open"></i> 新建 <span class="inline-code">~/zero-to-tech/backend/main.py</span></p>
+  <p><i class="fas fa-folder-open"></i>  <span class="inline-code">手搓 API 要处理 HTTP 的每一块。好在 Python 自带 http.server，接下来我们就用它逐项实现。</span></p>
+  <div class="code-block"><i class="fas fa-code"></i> from http.server import BaseHTTPRequestHandler, HTTPServer
+import json
+
+profile = {
+    "heroTitle": "关于我",
+    "heroSubtitle": "项目，创意，灵感，心得，我的作品",
+}
+
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == "/api/profile":
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            body = json.dumps(profile, ensure_ascii=False)
+            self.wfile.write(body.encode("utf-8"))
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+HTTPServer(("", 8000), Handler).serve_forever()</div>
+
+  <div class="highlight-box">
+    <i class="fas fa-map-pin"></i> <strong>代码 ↔ 规范对照：</strong><br>
+    <span class="inline-code">do_GET</span> → 请求行里的方法<br>
+    <span class="inline-code">self.path</span> → 请求行里的路径<br>
+    <span class="inline-code">self.send_response(200)</span> → 状态行<br>
+    <span class="inline-code">self.send_header(...)</span> → 响应头<br>
+    <span class="inline-code">self.end_headers()</span> → 空行（分界线）<br>
+    <span class="inline-code">self.wfile.write(...)</span> → 响应体
+  </div>
+
+  <h3><i class="fas fa-play"></i> 跑起来</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> python3 main.py   执行完命令光标不动不是卡死，而是serve_forever一直在守着8000端口</div>
+  <p>新终端窗口调用：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> curl http://localhost:8000/api/profile</div>
+  <p>浏览器打开 <span class="inline-code">http://localhost:8000/api/profile</span> 也能看到 JSON。</p>
+
+  <!-- ===== 5. 两个实验 ===== -->
+  <h2><i class="fas fa-flask"></i> 动手实验 · 理解头与元信息</h2>
+  <h3><i class="fas fa-tag"></i> 实验一：Content-Type 的威力</h3>
+  <p>临时加 /hello 路径，对比 <span class="inline-code">text/html</span> 和 <span class="inline-code">text/plain</span>：</p>
+  <div class="code-block"><i class="fas fa-code"></i> elif self.path == "/hello":
+    self.send_response(200)
+    self.send_header("Content-Type", "text/html; charset=utf-8")   # 改成 text/plain 试试
+    self.end_headers()
+    self.wfile.write("&lt;h1&gt;你好，HTTP&lt;/h1&gt;".encode("utf-8"))</div>
+  <ul>
+    <li><i class="fas fa-html5"></i> <span class="inline-code">text/html</span> → 浏览器渲染大标题</li>
+    <li><i class="fas fa-font"></i> <span class="inline-code">text/plain</span> → 原样显示标签源码</li>
+    <p>浏览器打开 http://localhost:8000/hello     记住：改动之后重启服务</p>
+</ul>
+
+  <h3><i class="fas fa-eye"></i> 实验二：服务端能看到什么</h3>
+  <p>在 <span class="inline-code">do_GET</span> 开头加两行：</p>
+  <div class="code-block"><i class="fas fa-code"></i> print(self.headers)          # 请求头
+print(self.client_address)   # 来源 IP + 端口</div>
+  <ul>
+    <li><i class="fas fa-robot"></i> curl -v http://localhost:8000/api/profile    再调用一次</span></li>
+    <li><i class="fas fa-robot"></i> curl 的 User-Agent 是 <span class="inline-code">curl/8.7.1   User-Agent 是“我是谁”的自我介绍：curl 报名字和版本，浏览器报一长串型号，服务端一眼就能分清请求来自浏览器还是程序</span></li>
+    <li><i class="fas fa-globe"></i> 浏览器的 User-Agent 是一长串型号</li>
+    <li><i class="fas fa-ip"></i> <span class="inline-code">client_address</span> 显示来源 IP（本机是 127.0.0.1）</li>
+  </ul>
+  <div class="highlight-box">
+    <i class="fas fa-shield-halved"></i> <strong>边界感：</strong> 服务端天然能看到 UA、IP、语言偏好。每个请求都比自己以为的更“透明”。
+  </div>
+
+  <!-- ===== 6. 框架登场 ===== -->
+  <h2><i class="fas fa-layer-group"></i> 杂活 vs 框架</h2>
+  <ul>
+    <li><i class="fas fa-hammer"></i> 手搓：路由、状态行、响应头、空行、响应体…… 一个接口尚且如此，十个接口要出人命。</li>
+    <li><i class="fas fa-box"></i> 框架（FastAPI）把这些杂活打包复用，缩成几行。</li>
+    <li><i class="fas fa-check-double"></i> 但正因为亲手搓过，我们确切知道框架替我们干了什么。</li>
+  </ul>
+  <p><i class="fas fa-arrow-right"></i> 下一节：FastAPI 登场。</p>
+
+  <!-- ===== 7. 小结 ===== -->
+  <h2><i class="fas fa-clipboard-check"></i> 这一节你应该带走什么</h2>
+  <ul>
+    <li><i class="fas fa-file-lines"></i> HTTP 报文格式：请求 ＝ 请求行＋头＋空行＋体；响应 ＝ 状态行＋头＋空行＋体</li>
+    <li><i class="fas fa-up-down"></i> 方法描述意图（GET/POST），不是数据方向；curl 默认 GET，带 -d 变 POST</li>
+    <li><i class="fas fa-digital-tiling"></i> 状态码家族：2xx 成功，4xx 请求方问题，5xx 服务方问题</li>
+    <li><i class="fas fa-must"></i> 硬要求：状态行、空行；实践必写：Content-Type</li>
+    <li><i class="fas fa-exchange"></i> Content-Type 一变，对方处理方式就变（HTML vs JSON）</li>
+    <li><i class="fas fa-server"></i> 我们的第一个 API：零依赖，纯标准库，<span class="inline-code">serve_forever()</span> 一直跑着等请求</li>
+    <li><i class="fas fa-tools"></i> curl -v / F12 随时能看报文原文</li>
+    <li><i class="fas fa-code"></i> 任何语言写后端，都是在实现同一套 HTTP 规范 → 所以有了框架</li>
+  </ul>
+
+  <hr>
+  <div class="footer-note">
+    <i class="fas fa-rocket"></i>
+    <span>HTTP · API · 手搓笔记</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># 从调用方到服务方</span>
+    <i class="fas fa-terminal" style="margin-left: 0.5rem;"></i>
+  </div>
+
+</div>
+</body>
+</html>

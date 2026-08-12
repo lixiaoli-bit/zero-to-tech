@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python · 后端环境 · 虚拟环境 · 笔记</title>
+  <!-- Font Awesome 6 (免费图标库) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f4f8fc 0%, #e6eef5 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 44px;
+      padding: 2.8rem 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0,20,30,0.25),
+                  0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 4px solid #1f6390;
+      padding-bottom: 0.7rem;
+      margin-bottom: 2.2rem;
+      color: #0a293f;
+      flex-wrap: wrap;
+    }
+
+    h1 i {
+      color: #1f6390;
+      font-size: 2.4rem;
+    }
+
+    .badge-header {
+      font-size: 1rem;
+      margin-left: auto;
+      background: #d2e3f0;
+      padding: 0.25rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 400;
+      color: #124263;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 500;
+      margin-top: 2.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1a4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1.2rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.07), transparent);
+      border-radius: 0 14px 14px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.6rem;
+      width: 2.2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 1.8rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1d4b6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.3rem;
+      width: 2rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.4rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), 0 6px 14px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1.1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.8rem;
+      text-align: center;
+      margin-right: 0.2rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 22px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    hr {
+      margin: 2.2rem 0 1.2rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 0.95rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: #1f6390;
+      color: white;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 1rem;
+      margin-right: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.5rem 1rem;
+      background: rgba(255,255,255,0.4);
+      border-radius: 24px;
+      padding: 0.8rem 1.2rem;
+      margin: 0.8rem 0;
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    .comparison-grid .grid-item {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0.2rem 0;
+    }
+
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+      .badge-header {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.3rem;
+      }
+      .comparison-grid {
+        grid-template-columns: 1fr;
+        gap: 0.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fab fa-python"></i> 
+    Python · 后端环境 · 虚拟环境
+    <span class="badge-header"><i class="fas fa-flask"></i> venv + pip + requirements</span>
+  </h1>
+
+  <!-- ===== 1. 安装 Python ===== -->
+  <h2><i class="fas fa-download"></i> 安装 Python</h2>
+  <p><i class="fas fa-check-circle" style="color:#2b7aa2;"></i> 先确认版本：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> python3 --version   # 或 python --version</div>
+  <p>建议直接官网下载最新稳定版：<a href="https://www.python.org/downloads/" target="_blank" style="color:#1f6390; text-decoration: none;"><i class="fas fa-external-link-alt"></i> python.org/downloads</a></p>
+  <div class="highlight-box">
+    <i class="fas fa-info-circle"></i> <strong>python 与 python3</strong>：macOS/Linux 通常 <span class="inline-code">python3</span> 指向 Python 3，<span class="inline-code">python</span> 可能指向 2.x 或为空；Windows 安装器通常直接 <span class="inline-code">python</span> 就是 3.x。哪个能用用哪个。
+  </div>
+
+  <h3><i class="fas fa-search-location"></i> 查看当前 Python 路径</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> which python3        # macOS/Linux <br> where python          # Windows CMD</div>
+  <p>想列出所有候选：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> which -a python3      # macOS/Linux</div>
+  <p><i class="fas fa-lightbulb" style="color:#d99f2b;"></i> 生存技能：环境问题先 <span class="inline-code">which python3</span> 或 <span class="inline-code">where python</span>，一眼看穿真相。</p>
+
+  <!-- ===== 2. venv 虚拟环境 ===== -->
+  <h2><i class="fas fa-cube"></i> venv 与环境隔离</h2>
+  <p>一台电脑可住多个 Python，每个项目用 venv 绑定专属版本和依赖，互不影响。</p>
+
+  <h3><i class="fas fa-plus-circle"></i> 创建虚拟环境（示例）</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> cd ~/project_A <br> python3.12 -m venv .venv</div>
+  <p>激活：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> source .venv/bin/activate   # macOS/Linux <br> .venv\Scripts\activate        # Windows 并且是cmd运行</div>
+  <p>提示符变为 <span class="inline-code">(.venv)</span>，此时 <span class="inline-code">python</span> 和 <span class="inline-code">python3</span> 都指向项目专属 Python。</p>
+  <p>退出：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> deactivate</div>
+
+  <div class="highlight-box">
+    <i class="fas fa-question-circle"></i> <strong>常见疑问</strong><br>
+    • 两个项目 .venv 都叫 .venv，可用 <span class="inline-code">--prompt</span> 自定义提示符：<br>
+    <span class="inline-code">python3 -m venv --prompt=project_A .venv</span> → 显示 <span class="inline-code">(project_A)</span><br>
+    • 如果已经在用 conda，建议退出改用 venv（课程采用 venv）：<br>
+    <span class="inline-code">conda config --set auto_activate_base false</span> 然后重启终端。
+  </div>
+
+  <h3><i class="fas fa-folder-tree"></i> 在项目中创建 backend 与 .venv</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> cd ~/zero-to-tech <br> mkdir backend <br> cd backend <br> python3 -m venv --prompt=zero-to-tech .venv <br> source .venv/bin/activate    # Windows 并且cmd运行，gitpush 还有点问题 .venv\Scripts\activate       </div>
+  <p>验证：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> which python     # → /Users/.../backend/.venv/bin/python <br> which python3    # → 同样指向 .venv</div>
+  <p><i class="fas fa-rule"></i> <strong>.venv 不进 Git</strong>，在 <span class="inline-code">.gitignore</span> 中加入 <span class="inline-code">backend/.venv/</span>。</p>
+  <p><i class="fas fa-rule"></i> <strong>  vscode 装插件 Python Environments，总端（顶部有terminal）自动识别虚拟环境</strong> </p>
+  
+  
+  <!-- ===== 3. 第一个 Python 程序 ===== -->
+  <h2><i class="fas fa-play-circle"></i> 第一个 Python 程序</h2>
+  <p>新建 <span class="inline-code">first_json.py</span>，生成 JSON：</p>
+  <div class="code-block"><i class="fas fa-code"></i> import json <br> <br> site_name = "zero-to-tech" <br> <br> def make_data(): <br>     data = {"message": "hello, world", "from": site_name} <br>     return json.dumps(data) <br> <br> print(make_data())</div>
+  <p>运行：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> python3 first_json.py <br> # 输出: {"message": "hello, world", "from": "zero-to-tech"}</div>
+
+  <h3><i class="fas fa-grip-lines"></i> 认一认 Python 结构</h3>
+  <ul>
+    <li><i class="fas fa-box"></i> <strong>import</strong>：引入库（标准库如 json, datetime, random, os, http.server）</li>
+    <li><i class="fas fa-tag"></i> <strong>变量</strong>：<span class="inline-code">site_name = "zero-to-tech"</span></li>
+    <li><i class="fas fa-cogs"></i> <strong>函数 + 缩进</strong>：<span class="inline-code">def make_data():</span> 缩进表示代码块</li>
+    <li><i class="fas fa-print"></i> <strong>print()</strong>：打印到终端</li>
+  </ul>
+
+  <!-- ===== 4. 第三方库 & pip ===== -->
+  <h2><i class="fas fa-box-open"></i> 装第一个第三方库：requests</h2>
+  <p>新建 <span class="inline-code">api_demo.py</span>：</p>
+  <div class="code-block"><i class="fas fa-code"></i> import requests <br> <br> resp = requests.get("https://api.ipify.org?format=json") <br> print(resp.json())</div>
+  <p>直接运行报错 <span class="inline-code">ModuleNotFoundError</span>，因为 requests 不是标准库，需安装：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> pip install requests</div>
+  <p>装完查看落点：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> pip show requests <br> # Location: /.../backend/.venv/lib/python3.x/site-packages</div>
+  <p>再运行：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> python3 api_demo.py <br> # {'ip': '114.86.123.45'}</div>
+  <p><i class="fas fa-info-circle"></i> <span class="inline-code">resp.json()</span> 返回 Python 字典（单引号），与 <span class="inline-code">json.dumps()</span> 的 JSON 文本（双引号）不同。</p>
+
+  <!-- ===== 5. requirements.txt ===== -->
+  <h2><i class="fas fa-list-ul"></i> requirements.txt · 依赖清单</h2>
+  <p>生成依赖清单：前端靠 package.json 记依赖，Python 靠 requirements.txt。生成它</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> pip freeze > requirements.txt</div>
+  <p>查看内容：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> cat requirements.txt <br> # certifi==2026.6.17 <br> # charset-normalizer==3.4.8 <br> # requests==2.34.2 <br> # ...</div>
+  <p>别人拿到项目，一键安装：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> pip install -r requirements.txt</div>
+  <div class="highlight-box">
+    <i class="fas fa-arrows-left-right"></i> <strong>前后端角色对应</strong>
+    <div class="comparison-grid" style="margin-top: 0.6rem;">
+      <div class="grid-item"><i class="fab fa-js"></i> <strong>前端</strong><br>npm<br>node_modules/<br>package.json</div>
+      <div class="grid-item"><i class="fab fa-python"></i> <strong>后端</strong><br>pip<br>.venv/<br>requirements.txt</div>
+      <div class="grid-item"><i class="fas fa-tasks"></i> <strong>作用</strong><br>装包<br>装到哪儿（不进Git）<br>依赖清单（进Git）</div>
+    </div>
+  </div>
+
+  <!-- ===== 6. 带走什么 ===== -->
+  <h2><i class="fas fa-suitcase"></i> 这一节你应该带走什么</h2>
+  <ul>
+    <li><i class="fas fa-check"></i> 后端先有运行环境：Python 从官网装，<span class="inline-code">python3 --version</span> 验证。</li>
+    <li><i class="fas fa-check"></i> 多个 Python 共存，用 <span class="inline-code">which python3</span> 排查；想用特定版本直接敲 <span class="inline-code">python3.12</span>。</li>
+    <li><i class="fas fa-check"></i> venv 给每个项目专属 Python：<span class="inline-code">python3 -m venv .venv</span> + <span class="inline-code">source .venv/bin/activate</span>，<span class="inline-code">deactivate</span> 退出。</li>
+    <li><i class="fas fa-check"></i> .venv 不进 Git；conda 用户可退出改用 venv。</li>
+    <li><i class="fas fa-check"></i> 运行 Python 程序：<span class="inline-code">python3 文件名.py</span>。</li>
+    <li><i class="fas fa-check"></i> 认得四个结构：<span class="inline-code">import</span>、变量、<span class="inline-code">def</span> + 缩进、字典≈JSON。</li>
+    <li><i class="fas fa-check"></i> 标准库 import 即用；第三方库需 <span class="inline-code">pip install</span>，装进当前激活的 .venv。</li>
+    <li><i class="fas fa-check"></i> <span class="inline-code">pip freeze > requirements.txt</span> 生成依赖清单，<span class="inline-code">pip install -r</span> 复现环境。</li>
+    <li><i class="fas fa-check"></i> 已经能用 Python 生成 JSON 并调 API（requests 版 curl）。</li>
+  </ul>
+  <p><i class="fas fa-arrow-right" style="color:#2b7aa2;"></i> 下一节：把 Python 程序变成真正的服务 —— 手搓第一个 API。</p>
+
+  <!-- 底部 -->
+  <hr>
+  <div class="footer-note">
+    <i class="fab fa-python"></i> 
+    <span>后端环境 · 从零搭建</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># venv · pip · requirements</span>
+    <i class="fas fa-terminal" style="margin-left: 0.5rem;"></i>
+  </div>
+
+</div>
+</body>
+</html>

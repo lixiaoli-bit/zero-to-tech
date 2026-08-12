@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API · 调用笔记 · 美化版</title>
+  <!-- Font Awesome 6 免费图标库 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f4f8fc 0%, #e6eef5 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 44px;
+      padding: 2.8rem 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0,20,30,0.25),
+                  0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 4px solid #1f6390;
+      padding-bottom: 0.7rem;
+      margin-bottom: 2.2rem;
+      color: #0a293f;
+      flex-wrap: wrap;
+    }
+
+    h1 i {
+      color: #1f6390;
+      font-size: 2.4rem;
+    }
+
+    .badge-header {
+      font-size: 1rem;
+      margin-left: auto;
+      background: #d2e3f0;
+      padding: 0.25rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 400;
+      color: #124263;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 500;
+      margin-top: 2.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1a4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1.2rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.07), transparent);
+      border-radius: 0 14px 14px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.6rem;
+      width: 2.2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 1.8rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1d4b6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.3rem;
+      width: 2rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.4rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), 0 6px 14px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1.1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.8rem;
+      text-align: center;
+      margin-right: 0.2rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 22px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    hr {
+      margin: 2.2rem 0 1.2rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 0.95rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: #1f6390;
+      color: white;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 1rem;
+      margin-right: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .quote-note {
+      background: rgba(30, 60, 90, 0.03);
+      border-radius: 28px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.5rem 0;
+      border: 1px dashed #9bbfd6;
+      color: #1d4057;
+    }
+
+    .quote-note i {
+      color: #3d8ec0;
+      margin-right: 0.6rem;
+    }
+
+    .api-compare {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin: 1rem 0 1.8rem 0;
+    }
+
+    .api-card {
+      flex: 1 1 200px;
+      background: white;
+      border-radius: 28px;
+      padding: 1.2rem 1.6rem;
+      border: 1px solid #d4e3f0;
+      box-shadow: 0 6px 12px -8px rgba(0,20,30,0.08);
+    }
+
+    .api-card i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+      .badge-header {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.3rem;
+      }
+      .api-compare {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fas fa-plug"></i> 
+    API · 调用笔记
+    <span class="badge-header"><i class="fas fa-cloud-upload-alt"></i> 从 curl 到 AI</span>
+  </h1>
+
+  <!-- ===== 1. 公网 IP 与 curl ===== -->
+  <h2><i class="fas fa-network-wired"></i> 第一个：查公网 IP</h2>
+  <p><i class="fas fa-globe" style="color:#2b7aa2;"></i> 使用 <span class="inline-code">ipify.org</span> 零门槛查询，终端 + curl 即可。</p>
+
+  <h3><i class="fas fa-terminal"></i> curl 命令</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> curl 'https://api.ipify.org?format=json'    ubanun可以win不行</div>
+  <div class="code-block"><i class="fas fa-terminal"></i> curl https://ifconfig.me    win可以</div>
+  <p>返回示例：</p>
+  <div class="code-block" style="background: #0f222f;"><i class="fas fa-code"></i> { "ip": "114.86.123.45" }</div>
+  <div class="highlight-box">
+    <i class="fas fa-info-circle"></i> 这就是一次典型的 <strong>GET 请求</strong>，获取数据，干净利落。我们刚才做的这件事，就叫“调用 ipify 的 API”。
+  </div>
+
+  <!-- ===== 2. DeepSeek API ===== -->
+  <h2><i class="fas fa-brain"></i> 第二个：调用 DeepSeek 大模型</h2>
+  <p><i class="fas fa-key" style="color:#2b7aa2;"></i> 需要 <span class="inline-code">API Key</span>（身份钥匙）和少量余额，体验真正的 AI 接口。</p>
+
+  <h3><i class="fas fa-id-card"></i> 准备 API Key</h3>
+  <ul>
+    <li><i class="fas fa-user-plus"></i> 注册 / 登录 <span class="inline-code">platform.deepseek.com</span></li>
+    <li><i class="fas fa-key"></i> 创建 API Key，以 <span class="inline-code">sk-</span> 开头，保存好</li>
+    <li><i class="fas fa-coins"></i> 充值少许（调用几次仅几分钱）</li>
+    <li><i class="fas fa-coins"></i> 把这个示例里面的 ${DEEPSEEK_API_KEY} 换成刚刚复制的以 sk- 开头的那段 API key。，引号留着 ubanun测试ok</li>
+    <li><i class="fas fa-coins"></i> 至于其他部分，我建议把下面这行里面的 Hello! 改为一句其他的 prompt，比如说改为 你好，请用一句话介绍你自己：
+</li>
+    
+    
+  </ul>
+
+  <h3><i class="fas fa-code"></i> 调用示例（curl）</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> curl https://api.deepseek.com/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ${DEEPSEEK_API_KEY}" \
+  -d '{
+        "model": "deepseek-v4-pro",
+        "messages": [
+          {"role": "system", "content": "You are a helpful assistant."},
+          {"role": "user", "content": "你好，请用一句话介绍你自己"}
+        ],
+        "thinking": {"type": "enabled"},
+        "reasoning_effort": "high",
+        "stream": false
+      }'</div>
+  <p>返回（精简后）：</p>
+  <div class="code-block" style="background: #0f222f;"><i class="fas fa-code"></i> {
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "你好！我是 DeepSeek，一个由深度求索打造的 AI 助手，很高兴为你服务。"
+      }
+    }
+  ]
+}</div>
+  <div class="highlight-box">
+    <i class="fas fa-check-circle"></i> 这就是 <strong>POST 请求</strong>，提交内容并获取回答，与 ipify 的 GET 形成对比。
+  </div>
+
+  <!-- ===== API 概念 ===== -->
+  <h2><i class="fas fa-cogs"></i> API 是设计给程序用的</h2>
+  <div class="quote-note">
+    <i class="fas fa-laptop-code"></i> 程序不会打开浏览器，但可以通过 API 调用服务。API 就是程序之间的“握手”入口。
+  </div>
+  <ul>
+    <li><i class="fas fa-arrow-right"></i> 网页/APP 是人用的，API 是程序用的</li>
+    <li><i class="fas fa-arrow-right"></i> 只要按规范请求，就能用上能力，无需关心内部实现</li>
+    <li><i class="fas fa-arrow-right"></i> 一次 API 调用 = 请求 → 处理 → 响应（通常是 JSON）</li>
+  </ul>
+
+  <h3><i class="fas fa-balance-scale"></i> GET vs POST</h3>
+  <div class="api-compare">
+    <div class="api-card"><i class="fas fa-download"></i> <strong>GET</strong> — 取数据<br><span style="font-size:0.9rem; opacity:0.8;">如 ipify 查 IP</span></div>
+    <div class="api-card"><i class="fas fa-upload"></i> <strong>POST</strong> — 提交数据<br><span style="font-size:0.9rem; opacity:0.8;">如 DeepSeek 对话</span></div>
+  </div>
+
+  <!-- ===== AI 时代 API ===== -->
+  <h2><i class="fas fa-robot"></i> 为什么 AI 时代到处都是 API</h2>
+  <p><i class="fas fa-meteor" style="color:#d99f2b;"></i> AI 产品、AI Agent 的本质就是不停调用各种 API：查天气、搜网页、发消息、调模型……</p>
+  <div class="highlight-box">
+    <i class="fas fa-unlink"></i> 理解了 API，就揭开了 AI 工具神秘面纱的一大半。
+  </div>
+
+  <!-- ===== 我们的网站：前端调后端 ===== -->
+  <h2><i class="fas fa-sitemap"></i> 回到我们的网站：前端调后端</h2>
+  <p>我们的网站目前只有前端（展示 + 交互），但文字实验室的“拼音 / 情感分数”需要后端计算。解决方案：</p>
+  <ul>
+    <li><i class="fas fa-server"></i> 自己写一个后端 API（类似 DeepSeek 的 <span class="inline-code">/chat/completions</span>）</li>
+    <li><i class="fas fa-exchange-alt"></i> 前端把文字发给 API，后端返回 JSON（含拼音 + 情感分）</li>
+  </ul>
+  <div class="quote-note">
+    <i class="fas fa-lightbulb"></i> 这和你刚才调 DeepSeek 是同一回事。接下来我们就要亲手写出自己的 API。
+  </div>
+
+  <!-- ===== 后端是什么 ===== -->
+  <h2><i class="fas fa-database"></i> 后端是什么？</h2>
+  <ul>
+    <li><i class="fas fa-eye"></i> <strong>前端</strong>：浏览器里，负责展示与交互</li>
+    <li><i class="fas fa-server"></i> <strong>后端</strong>：服务器上一直运行的程序，负责计算、处理、存储</li>
+    <li><i class="fas fa-link"></i> <strong>API</strong>：前端调用后端的入口</li>
+  </ul>
+  <p>后端可以用很多语言写：Python、Node.js、Go、Java……我们选 Python，因为生态成熟、对初学者友好。</p>
+  <div class="highlight-box">
+    <i class="fas fa-code-branch"></i> Python 只是选项之一，API 概念与语言无关。
+  </div>
+
+  <!-- ===== 这一节带走什么 ===== -->
+  <h2><i class="fas fa-backpack"></i> 这一节你应该带走什么</h2>
+  <ul>
+    <li><i class="fas fa-door-open"></i> API 是程序对外的入口，按规范请求即可用</li>
+    <li><i class="fas fa-sync-alt"></i> 一次 API 调用 = 请求 → 处理 → 响应（JSON）</li>
+    <li><i class="fas fa-globe"></i> 两个不同服务（ipify / DeepSeek）调用方式一致，都是 API</li>
+    <li><i class="fas fa-robot"></i> AI 应用天天在调 API，不神秘</li>
+    <li><i class="fas fa-tools"></i> 我们的网站即将补上后端，用 Python 写出自己的 API</li>
+  </ul>
+
+  <!-- ===== 附：完整流程回顾 ===== -->
+  <h2><i class="fas fa-list-check"></i> 动手实践 · 小抄</h2>
+  <div class="grid-2col">
+    <div class="grid-item"><i class="fas fa-terminal"></i> <strong>查 IP</strong><br> <span class="inline-code">curl 'https://api.ipify.org?format=json'</span></div>
+    <div class="grid-item"><i class="fas fa-robot"></i> <strong>调 DeepSeek</strong><br> 替换 key，用 curl 发 POST 请求</div>
+    <div class="grid-item"><i class="fas fa-code"></i> <strong>响应格式</strong><br> JSON 是标准，解析 <span class="inline-code">.ip</span> 或 <span class="inline-code">.choices[0].message.content</span></div>
+    <div class="grid-item"><i class="fas fa-cloud-upload-alt"></i> <strong>下一步</strong><br> 写 Python 后端，提供自己的 API</div>
+  </div>
+
+  <!-- 底部 -->
+  <hr>
+  <div class="footer-note">
+    <i class="fas fa-rocket"></i> 
+    <span>从 curl 到 AI · API 调用笔记</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># API · 后端 · Python</span>
+    <i class="fas fa-terminal" style="margin-left: 0.5rem;"></i>
+  </div>
+
+</div>
+</body>
+</html>

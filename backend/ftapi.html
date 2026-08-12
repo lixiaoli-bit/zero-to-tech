@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FastAPI · 后端框架 · 从手搓到自动化</title>
+  <!-- Font Awesome 6 (免费图标库) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f0f6fc 0%, #e2eaf2 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 44px;
+      padding: 2.8rem 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0,20,30,0.25),
+                  0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 4px solid #1f6390;
+      padding-bottom: 0.7rem;
+      margin-bottom: 2.2rem;
+      color: #0a293f;
+      flex-wrap: wrap;
+    }
+
+    h1 i {
+      color: #1f6390;
+      font-size: 2.4rem;
+    }
+
+    .badge-header {
+      font-size: 1rem;
+      margin-left: auto;
+      background: #d2e3f0;
+      padding: 0.25rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 400;
+      color: #124263;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 500;
+      margin-top: 2.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1a4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1.2rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.07), transparent);
+      border-radius: 0 14px 14px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.6rem;
+      width: 2.2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 1.8rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1d4b6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.3rem;
+      width: 2rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.4rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), 0 6px 14px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .code-block .comment {
+      color: #8aaec9;
+      font-style: italic;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1.1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.8rem;
+      text-align: center;
+      margin-right: 0.2rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 22px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    hr {
+      margin: 2.2rem 0 1.2rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 0.95rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: #1f6390;
+      color: white;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 1rem;
+      margin-right: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1.5rem;
+      background: rgba(255,255,255,0.4);
+      border-radius: 24px;
+      padding: 1rem 1.5rem;
+      margin: 0.8rem 0;
+      border: 1px solid rgba(61,142,192,0.15);
+    }
+
+    .comparison-item {
+      display: flex;
+      gap: 0.5rem;
+      align-items: baseline;
+      padding: 0.3rem 0;
+      border-bottom: 1px dashed rgba(0,0,0,0.04);
+    }
+    .comparison-item:last-child {
+      border-bottom: none;
+    }
+    .comparison-item .label {
+      font-weight: 500;
+      color: #1a4b6e;
+      min-width: 110px;
+    }
+    .comparison-item .value {
+      color: #124263;
+    }
+    .comparison-item i {
+      color: #3d8ec0;
+      width: 1.6rem;
+    }
+
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+      .badge-header {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.3rem;
+      }
+      .comparison-grid {
+        grid-template-columns: 1fr;
+        padding: 0.8rem 1rem;
+      }
+      .comparison-item .label {
+        min-width: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fas fa-code"></i> 
+    FastAPI · 后端框架
+    <span class="badge-header"><i class="fas fa-robot"></i> 从手搓到自动化</span>
+  </h1>
+
+  <!-- ===== 1. 框架与杂活 ===== -->
+  <h2><i class="fas fa-layer-group"></i> 框架 · 把杂活打包复用</h2>
+  <p><i class="fas fa-cogs" style="color:#2b7aa2;"></i> 后端框架管的是：接住请求、解析内容、把响应发回去。我们只需要关心 <span class="inline-code">“这个路径，该返回什么数据”</span>。</p>
+
+  <div class="highlight-box">
+    <i class="fas fa-exchange-alt"></i> <strong>手搓版 vs FastAPI 版</strong> —— 上一节我们手写了路由、状态码、响应头、dumps、encode、404…… 而 FastAPI 一行装饰器全包了。
+  </div>
+
+  <h3><i class="fas fa-tachometer-alt"></i> 主流框架认脸</h3>
+  <ul>
+    <li><i class="fas fa-flask"></i> <strong>Flask</strong> — 老牌轻量，入门经典</li>
+    <li><i class="fas fa-dragon"></i> <strong>Django</strong> — 大而全，自带ORM和管理后台</li>
+    <li><i class="fas fa-bolt"></i> <strong>FastAPI</strong> — 专为API而生，代码少、自动校验、自动文档</li>
+  </ul>
+  <p>概念相通，把 FastAPI 用明白，Flask/Django 都是熟面孔。</p>
+
+  <!-- ===== 2. FastAPI + uvicorn ===== -->
+
+  <h2><i class="fas fa-plug"></i> 两个角色：FastAPI 与 uvicorn</h2>
+  <div class="grid-2col">
+    <div class="grid-item"><i class="fas fa-pencil-alt"></i> <strong>FastAPI</strong> — 定义接口，组织响应</div>
+    <div class="grid-item"><i class="fas fa-server"></i> <strong>uvicorn</strong> — 运行服务器，监听端口</div>
+  </div>
+  <p><i class="fas fa-arrow-right" style="color:#1f6390;"></i> 进后端项目<span class="inline-code">---激活虚拟环境  source .venv/bin/activate      # 若提示符没带括号</span> </p>
+  <p><i class="fas fa-arrow-right" style="color:#1f6390;"></i> 安装：<span class="inline-code">pip install "fastapi[standard]"</span> （套餐包含 uvicorn、starlette、pydantic 等）</p>
+  <p><i class="fas fa-arrow-right" style="color:#1f6390;"></i> 铺垫结束，正主登场。先把手搓版留作纪念<span class="inline-code">mv main.py handmade.py</span> </p>
+
+  
+  <!-- ===== 3. 重写 /api/profile ===== -->
+  <h2><i class="fas fa-code-branch"></i> 新建 main.py，写 FastAPI 版 重写 /api/profile · 感受减法</h2>
+  <div class="code-block"><i class="fas fa-file-code"></i> main.py
+from fastapi import FastAPI
+app = FastAPI()
+
+profile = {
+    "heroTitle": "关于我",
+    "heroSubtitle": "项目，创意，灵感，心得，我的作品",
+}
+
+@app.get("/api/profile")
+def get_profile():
+    return profile</div>
+
+  <div class="comparison-grid">
+    <div class="comparison-item"><i class="fas fa-times-circle"></i><span class="label">手搓版</span><span class="value">if self.path 路由判断、send_response(200)、json.dumps、404兜底...</span></div>
+    <div class="comparison-item"><i class="fas fa-check-circle"></i><span class="label">FastAPI 版</span><span class="value">@app.get(...) 装饰器，自动 JSON，自动 404</span></div>
+    <div class="comparison-item"><i class="fas fa-magic"></i><span class="label">自动文档</span><span class="value">/docs 自动生成，可交互调试</span></div>
+  </div>
+  <h3><i class="fas fa-terminal"></i> 启动命令</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> uvicorn main:app --reload   <span class="comment"># 手动挡uvicorn 去找 main.py 文件里的 app（这里不写 .py）</span>
+fastapi dev                     <span class="comment"># 快捷命令，默认 main.py，带 --reload</span></div>
+  <p><i class="fas fa-info-circle"></i> 以后统一用 <span class="inline-code">fastapi dev</span>，简洁且和官网一致。</p>
+  <p><i class="fas fa-info-circle"></i> 访问： <span class="inline-code">http://127.0.0.1:8000/api/profile</span></p>
+  <p><i class="fas fa-info-circle"></i> 访问不存在目录，他还404，比我们手戳的都周到</p>
+  <p><i class="fas fa-info-circle"></i> 惊喜的是我们的api长出自己的文档<span class="inline-code">http://127.0.0.1:8000/docs</p>
+
+  <!-- ===== 4. POST /api/analyze ===== -->
+  <h2><i class="fas fa-upload"></i> 加一个 POST 接口：/api/analyze</h2>
+  <p><i class="fas fa-shape"></i> 先定约定：请求体 <span class="inline-code">{ "text": "..." }</span> ，响应形状含 <span class="inline-code">text / score / label / pinyin</span>（后三个占位）。</p>
+
+  <div class="code-block"><i class="fas fa-file-code"></i> main.py (增量)
+     顶部加 
+    from pydantic import BaseModel
+profile后面加
+class AnalyzeRequest(BaseModel):
+    text: str
+末尾加
+@app.post("/api/analyze")
+def analyze(req: AnalyzeRequest):
+    return {
+        "text": req.text,
+        "score": 0.5,
+        "label": "偏平静",
+        "pinyin": "（模块 6 再说）",
+    }</div>
+
+  <div class="highlight-box">
+    <i class="fas fa-shield-alt"></i> <strong>BaseModel 的威力</strong>：自动收字节、解析 JSON、校验字段类型，缺字段或类型错自动返回 422 错误，文档同步更新。
+  </div>
+
+  <h3><i class="fas fa-vial"></i> 测试与报错</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> curl http://localhost:8000/api/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"text": "今天的风很轻"}'
+  上面代码加-i 为的是看清
+</div>
+  <div class="code-block">
+上面代码显示错误的话，按照这个步骤测试
+http://localhost:8000/docs
+找到 /api/analyze 端点，点击 "Try it out"，输入：
+{"text": "今天的风很轻"}
+然后点击 "Execute"。如果 Swagger UI 能成功，说明服务器端没问题，是 curl 命令的问题。
+  </div>
+  <div class="code-block">
+# 方式 C：从文件读取
+echo '{"text": "今天的风很轻"}' > data.json
+curl -X POST http://localhost:8000/api/analyze \
+  -H "Content-Type: application/json" \
+  -d @data.json
+  </div>
+  <p>故意写错字段名 <span class="inline-code">{"txt": "..."}</span> 会得到 <span class="inline-code">422 Unprocessable Entity</span>；代码内 <span class="inline-code">req.txt</span> 笔误则返回 <span class="inline-code">500</span>，终端红字 traceback 明确提示 <span class="inline-code">AttributeError</span>。</p>
+
+  <!-- ===== 5. 自动文档 & 缓存 ===== -->
+  <h2><i class="fas fa-book-open"></i> 惊喜：自动文档 + __pycache__</h2>
+  <ul>
+    <li><i class="fas fa-file-alt"></i> 浏览器打开 <span class="inline-code">http://localhost:8000/docs</span>，接口说明书自动生成，支持 Try it out。</li>
+    <li><i class="fas fa-folder"></i> <span class="inline-code">__pycache__/</span> 是 Python 自动生成的缓存目录，应加入 <span class="inline-code">.gitignore</span>。</li>
+    <li><i class="fas fa-list-ul"></i> 依赖清单：<span class="inline-code">pip freeze > requirements.txt</span>，把 fastapi、uvicorn 等整套记下来。</li>
+  </ul>
+
+  
+  <!-- ===== 7. 收尾 ===== -->
+  <h2><i class="fas fa-check-double"></i> 这一节带走什么</h2>
+  <ul>
+    <li><i class="fas fa-boxes"></i> 框架 = 把后端杂活打包复用，我们手搓过，所以确切知道 FastAPI 替我们干了什么。</li>
+    <li><i class="fas fa-route"></i> FastAPI 管定义接口，uvicorn 管运行；<span class="inline-code">fastapi dev</span> 统一启动。</li>
+    <li><i class="fas fa-file-signature"></i> 先定约定（请求/响应形状），再用 <span class="inline-code">BaseModel</span> 声明，自动校验+文档。</li>
+    <li><i class="fas fa-sync-alt"></i> 目前 <span class="inline-code">score/label/pinyin</span> 是占位，模块 6 换真的，调用方毫无感知。</li>
+    <li><i class="fas fa-database"></i> 更新 <span class="inline-code">.gitignore</span>（忽略 __pycache__）和 <span class="inline-code">requirements.txt</span>。</li>
+  </ul>
+
+  <!-- 额外：框架对比小卡片 -->
+  <h2><i class="fas fa-balance-scale"></i> 框架速览</h2>
+  <div class="grid-2col">
+    <div class="grid-item"><i class="fas fa-flask"></i> <strong>Flask</strong> 轻量灵活，生态成熟</div>
+    <div class="grid-item"><i class="fas fa-dragon"></i> <strong>Django</strong> 大而全，自带后台</div>
+    <div class="grid-item"><i class="fas fa-bolt"></i> <strong>FastAPI</strong> 现代、快速、自动文档</div>
+    <div class="grid-item"><i class="fas fa-cubes"></i> <strong>共通概念</strong> 路由、请求、响应、中间件</div>
+  </div>
+
+  <!-- 底部 -->
+  <hr>
+  <div class="footer-note">
+    <i class="fas fa-rocket"></i> 
+    <span>从手搓到框架 · FastAPI 起步</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># 后端 · API · 自动化</span>
+    <i class="fas fa-terminal" style="margin-left: 0.5rem;"></i>
+  </div>
+
+</div>
+</body>
+</html>
