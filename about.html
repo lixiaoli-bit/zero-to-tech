@@ -375,6 +375,15 @@
   <div class="code-block"><i class="fas fa-terminal"></i> sudo nginx -t</div>
   <p>平滑重新加载：</p>
   <div class="code-block"><i class="fas fa-terminal"></i> sudo systemctl reload nginx</div>
+  <p>之后服务器进行的操作：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> # 1. 先让 systemd 重新读取所有单元文件（消除警告）
+sudo systemctl daemon-reload
+
+# 2. 测试 nginx 配置语法是否正确
+sudo nginx -t
+
+# 3. 平滑重载 nginx 配置（不中断服务）
+sudo systemctl reload nginx</div>
 
   <h3><i class="fas fa-exclamation-triangle"></i> 第 5 步：浏览器打开 → 404？</h3>
   <p>浏览器访问 <span class="inline-code">http://你的公网IP</span>，出现 404 是预料之中的。</p>
