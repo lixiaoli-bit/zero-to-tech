@@ -265,6 +265,47 @@
       color: #2b7aa2;
     }
 
+    /* 卡片底部跳转链接 — 仿 main.html 的 .btn-link */
+    .card-footer-link {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 0.8rem;
+      border-top: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #0f1f32;
+      color: white;
+      padding: 0.5rem 1.6rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      border: 1px solid transparent;
+      box-shadow: 0 4px 12px rgba(0,20,40,0.06);
+    }
+
+    .btn-link i {
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+
+    .btn-link:hover {
+      background: #1a3550;
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px rgba(0, 20, 40, 0.12);
+    }
+
+    .btn-link:active {
+      transform: scale(0.97);
+    }
+
     .footer-note {
       margin-top: 2.8rem;
       text-align: right;
@@ -323,6 +364,10 @@
         height: 30px;
         font-size: 0.8rem;
       }
+      .btn-link {
+        padding: 0.4rem 1.2rem;
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
@@ -351,7 +396,7 @@
     </div>
   </div>
 
-  <!-- 卡片网格：四篇笔记，标题带序号（仿 main.html 风格） -->
+  <!-- 卡片网格：四篇笔记，标题带序号 + 底部跳转链接（仿 main.html） -->
   <div class="card-grid">
 
     <!-- 1. API 调用笔记 -->
@@ -375,6 +420,10 @@
         <span><i class="fas fa-network-wired"></i> GET / POST</span>
         <span><i class="fas fa-brain"></i> DeepSeek</span>
         <span><i class="fas fa-server"></i> 前端调后端</span>
+      </div>
+      <div class="card-footer-link">
+        <a href="./api_.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+        <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
       </div>
     </div>
 
@@ -400,6 +449,10 @@
         <span><i class="fas fa-cube"></i> venv</span>
         <span><i class="fas fa-list-ul"></i> requirements.txt</span>
       </div>
+      <div class="card-footer-link">
+        <a href="./anzhuangpy.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+        <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
+      </div>
     </div>
 
     <!-- 3. 手搓 API -->
@@ -424,6 +477,10 @@
         <span><i class="fas fa-hand-sparkles"></i> 手搓</span>
         <span><i class="fas fa-tools"></i> curl -v</span>
       </div>
+      <div class="card-footer-link">
+        <a href="./shouapi.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+        <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
+      </div>
     </div>
 
     <!-- 4. FastAPI 框架 -->
@@ -447,6 +504,10 @@
         <span><i class="fas fa-bolt"></i> FastAPI</span>
         <span><i class="fas fa-server"></i> uvicorn</span>
         <span><i class="fas fa-book-open"></i> /docs</span>
+      </div>
+      <div class="card-footer-link">
+        <a href="./ftapi.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+        <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
       </div>
     </div>
 
