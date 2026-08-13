@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python · 后端笔记 · 系列索引</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f4f8fc 0%, #e6eef5 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.40);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 48px;
+      padding: 2.8rem 3rem;
+      box-shadow: 0 30px 60px -20px rgba(0, 20, 30, 0.35),
+                  0 8px 28px -8px rgba(0, 0, 0, 0.08),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.60);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 4px solid #1f6390;
+      padding-bottom: 0.7rem;
+      margin-bottom: 2.2rem;
+      color: #0a293f;
+      flex-wrap: wrap;
+    }
+
+    h1 i {
+      color: #1f6390;
+      font-size: 2.4rem;
+    }
+
+    .badge-header {
+      font-size: 1rem;
+      margin-left: auto;
+      background: rgba(210, 227, 240, 0.55);
+      backdrop-filter: blur(4px);
+      padding: 0.25rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 400;
+      color: #124263;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .intro-section {
+      background: rgba(61, 142, 192, 0.06);
+      backdrop-filter: blur(4px);
+      border-radius: 28px;
+      padding: 1.6rem 2rem;
+      margin-bottom: 2.2rem;
+      border-left: 6px solid #3d8ec0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .intro-section p {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #1a3a52;
+    }
+
+    .intro-section .highlight-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 2rem;
+      margin-top: 0.2rem;
+    }
+
+    .intro-section .highlight-list span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #1f4b6e;
+      font-weight: 500;
+    }
+
+    .intro-section .highlight-list span i {
+      color: #2b7aa2;
+      font-size: 0.9rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(8px) saturate(160%);
+      -webkit-backdrop-filter: blur(8px) saturate(160%);
+      border-radius: 32px;
+      padding: 1.6rem 1.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 6px 20px -10px rgba(0, 20, 30, 0.08);
+      transition: 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(12px) saturate(190%);
+      box-shadow: 0 16px 32px -16px rgba(0, 20, 30, 0.18);
+      border-color: #b6d4e8;
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.6rem;
+      border-bottom: 2px solid rgba(61, 142, 192, 0.15);
+      padding-bottom: 0.6rem;
+    }
+
+    .card-header i {
+      font-size: 2rem;
+      color: #1f6390;
+      width: 2.6rem;
+      text-align: center;
+    }
+
+    .card-header h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0a293f;
+      letter-spacing: -0.01em;
+      margin: 0;
+      border: none;
+      padding: 0;
+      background: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* 序号徽章：仿 main.html 风格，带圆形背景 */
+    .order-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f1f32;
+      color: #ffffff;
+      font-weight: 600;
+      width: 34px;
+      height: 34px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(0, 20, 40, 0.10);
+      margin-left: 0.2rem;
+    }
+
+    .card .sub {
+      font-size: 0.9rem;
+      color: #3d6a8a;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .card .sub i {
+      color: #3d8ec0;
+      font-size: 0.9rem;
+      width: auto;
+    }
+
+    .card .desc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.2rem 0 0.4rem 0;
+      line-height: 1.7;
+    }
+
+    .card .desc-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      color: #1f3f57;
+      font-size: 0.95rem;
+      padding: 0.1rem 0;
+    }
+
+    .card .desc-list li i {
+      color: #2b7aa2;
+      font-size: 0.75rem;
+      margin-top: 0.35rem;
+      min-width: 1.2rem;
+      text-align: center;
+    }
+
+    .card .desc-list li code {
+      background: rgba(0, 0, 0, 0.04);
+      padding: 0.05rem 0.4rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      color: #1f6390;
+    }
+
+    .card .meta-tags {
+      margin-top: 0.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.7rem;
+      border-top: 1px solid rgba(61, 142, 192, 0.10);
+      padding-top: 0.8rem;
+    }
+
+    .card .meta-tags span {
+      background: rgba(212, 227, 240, 0.40);
+      backdrop-filter: blur(2px);
+      border-radius: 30px;
+      padding: 0.1rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #124263;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .card .meta-tags span i {
+      font-size: 0.7rem;
+      color: #2b7aa2;
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 0.95rem;
+      color: #4d6a82;
+      border-top: 1px solid rgba(202, 221, 240, 0.5);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    hr {
+      margin: 2.2rem 0 1.2rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(182, 212, 232, 0.6), transparent);
+    }
+
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+        border-radius: 32px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .card-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+      .card-header h2 {
+        font-size: 1.3rem;
+      }
+      .badge-header {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.3rem;
+      }
+      .intro-section {
+        padding: 1.2rem 1.2rem;
+      }
+      .intro-section .highlight-list {
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      .order-badge {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 主标题 -->
+  <h1>
+    <i class="fab fa-python"></i>
+    后端 · 从零到 API
+    <span class="badge-header"><i class="fas fa-book-open"></i> 系列笔记 · 索引</span>
+  </h1>
+
+  <!-- 简介区：有条理地概括四篇笔记，保留磨砂 -->
+  <div class="intro-section">
+    <p>
+      <i class="fas fa-arrow-right" style="color: #2b7aa2; margin-right: 0.5rem;"></i>
+      本系列笔记围绕 <strong>“后端开发与 API”</strong> 展开，按 <strong>“理解概念 → 搭建环境 → 手写实现 → 框架提效”</strong> 的路径递进。
+      每篇都配有可运行的代码和动手实验，适合跟着敲一遍。
+    </p>
+    <div class="highlight-list">
+      <span><i class="fas fa-plug"></i> ① API 调用笔记 —— 先搞懂 API 是什么、怎么调</span>
+      <span><i class="fab fa-python"></i> ② 安装 Python —— 把开发环境搭好</span>
+      <span><i class="fas fa-code-branch"></i> ③ 手搓 API —— 自己实现一个 HTTP 服务</span>
+      <span><i class="fas fa-code"></i> ④ FastAPI 框架 —— 用框架把杂活打包复用</span>
+    </div>
+  </div>
+
+  <!-- 卡片网格：四篇笔记，标题带序号（仿 main.html 风格） -->
+  <div class="card-grid">
+
+    <!-- 1. API 调用笔记 -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-plug"></i>
+        <h2>
+          <span class="order-badge">1</span>
+          API · 调用笔记
+        </h2>
+      </div>
+      <div class="sub">
+        <i class="fas fa-cloud-upload-alt"></i> 从 curl 到 AI
+      </div>
+      <ul class="desc-list">
+        <li><i class="fas fa-chevron-right"></i> 用 <code>curl</code> 调用公网 IP 接口，体验 GET 请求</li>
+        <li><i class="fas fa-chevron-right"></i> 调用 DeepSeek 大模型 API，完成一次真实的 POST 请求</li>
+        <li><i class="fas fa-chevron-right"></i> 理清 API 是程序对外的入口，对比 GET / POST 的用途</li>
+      </ul>
+      <div class="meta-tags">
+        <span><i class="fas fa-network-wired"></i> GET / POST</span>
+        <span><i class="fas fa-brain"></i> DeepSeek</span>
+        <span><i class="fas fa-server"></i> 前端调后端</span>
+      </div>
+    </div>
+
+    <!-- 2. 安装 Python -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fab fa-python"></i>
+        <h2>
+          <span class="order-badge">2</span>
+          安装 Python
+        </h2>
+      </div>
+      <div class="sub">
+        <i class="fas fa-flask"></i> venv + pip + requirements
+      </div>
+      <ul class="desc-list">
+        <li><i class="fas fa-chevron-right"></i> 确认 Python 版本，理清 <code>python</code> 与 <code>python3</code> 的差别</li>
+        <li><i class="fas fa-chevron-right"></i> 用 <code>venv</code> 创建虚拟环境，实现项目隔离</li>
+        <li><i class="fas fa-chevron-right"></i> 安装第三方库，生成 <code>requirements.txt</code> 依赖清单</li>
+      </ul>
+      <div class="meta-tags">
+        <span><i class="fas fa-terminal"></i> python3 --version</span>
+        <span><i class="fas fa-cube"></i> venv</span>
+        <span><i class="fas fa-list-ul"></i> requirements.txt</span>
+      </div>
+    </div>
+
+    <!-- 3. 手搓 API -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-code-branch"></i>
+        <h2>
+          <span class="order-badge">3</span>
+          手搓 API
+        </h2>
+      </div>
+      <div class="sub">
+        <i class="fas fa-cloud-upload-alt"></i> 从调用方到服务方
+      </div>
+      <ul class="desc-list">
+        <li><i class="fas fa-chevron-right"></i> 用 Python 标准库 <code>http.server</code> 手写一个 API 服务</li>
+        <li><i class="fas fa-chevron-right"></i> 逐行对照 HTTP 规范：请求行、状态行、响应头、空行、响应体</li>
+        <li><i class="fas fa-chevron-right"></i> 通过实验理解 <code>Content-Type</code> 和 User-Agent 的作用</li>
+      </ul>
+      <div class="meta-tags">
+        <span><i class="fas fa-file-lines"></i> HTTP 报文</span>
+        <span><i class="fas fa-hand-sparkles"></i> 手搓</span>
+        <span><i class="fas fa-tools"></i> curl -v</span>
+      </div>
+    </div>
+
+    <!-- 4. FastAPI 框架 -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-code"></i>
+        <h2>
+          <span class="order-badge">4</span>
+          FastAPI · 后端框架
+        </h2>
+      </div>
+      <div class="sub">
+        <i class="fas fa-robot"></i> 从手搓到自动化
+      </div>
+      <ul class="desc-list">
+        <li><i class="fas fa-chevron-right"></i> 用 FastAPI 重写手搓版接口，代码量大幅缩减</li>
+        <li><i class="fas fa-chevron-right"></i> 引入 <code>BaseModel</code> 做请求校验，自动返回 422 错误</li>
+        <li><i class="fas fa-chevron-right"></i> 体验自动生成的 <code>/docs</code> 交互式 API 文档</li>
+      </ul>
+      <div class="meta-tags">
+        <span><i class="fas fa-bolt"></i> FastAPI</span>
+        <span><i class="fas fa-server"></i> uvicorn</span>
+        <span><i class="fas fa-book-open"></i> /docs</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 底部 -->
+  <hr>
+  <div class="footer-note">
+    <i class="fas fa-book"></i>
+    <span>后端 · 从零到 API · 系列笔记</span>
+    <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># Python · HTTP · FastAPI</span>
+    <i class="fas fa-terminal" style="margin-left: 0.5rem;"></i>
+  </div>
+
+</div>
+</body>
+</html>
