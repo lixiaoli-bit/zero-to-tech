@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certbot 一键配置 HTTPS · 解决方案</title>
+    <!-- 使用轻量级字体与优雅图标 (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f6f9fc 0%, #e9f1f8 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.6;
+            color: #1e293b;
+        }
+
+        .card {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 48px;
+            padding: 2.5rem 2.8rem;
+            box-shadow: 0 20px 40px -12px rgba(0, 20, 30, 0.25), 
+                        0 8px 24px -6px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.2s ease;
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                padding: 1.8rem 1.2rem;
+                border-radius: 32px;
+            }
+        }
+
+        /* 头部区域 */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .header-icon {
+            background: #0b3b5c;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 6px 12px -6px rgba(11, 59, 92, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #0b3b5c, #1d6f8f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-left: 0.25rem;
+        }
+
+        .badge {
+            background: #d4edda;
+            color: #0b5e2e;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+            border: 1px solid #b7dfc9;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .badge i {
+            margin-right: 6px;
+            font-size: 0.75rem;
+        }
+
+        /* 引导描述 */
+        .lead {
+            background: #e6f0fa;
+            border-radius: 24px;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2.2rem;
+            border-left: 6px solid #1d6f8f;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .lead i {
+            color: #1d6f8f;
+            font-size: 1.6rem;
+            margin-top: 0.15rem;
+        }
+
+        .lead p {
+            font-size: 1.05rem;
+            font-weight: 450;
+            margin: 0;
+            color: #0b3448;
+        }
+
+        .lead strong {
+            font-weight: 700;
+            color: #0a3142;
+        }
+
+        /* 通用章节 */
+        .section {
+            margin-top: 2rem;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 650;
+            font-size: 1.3rem;
+            color: #0b3b5c;
+            margin-bottom: 1rem;
+            border-bottom: 2px dashed rgba(27, 85, 115, 0.2);
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title i {
+            color: #1d6f8f;
+            font-size: 1.2rem;
+            width: 1.8rem;
+        }
+
+        .code-block {
+            background: #0e1e2b;
+            color: #e3edf5;
+            border-radius: 20px;
+            padding: 1.2rem 1.5rem;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border: 1px solid #2f4a5e;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.3);
+            margin: 0.75rem 0 1.2rem 0;
+            position: relative;
+        }
+
+        .code-block .comment {
+            color: #8aaec9;
+            font-style: italic;
+        }
+
+        .code-block .highlight {
+            color: #f7d44a;
+        }
+
+        .code-block .cmd {
+            color: #b3d9ff;
+        }
+
+        .inline-code {
+            background: #e2ebf3;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #0e3d57;
+            border: 1px solid #cbdce9;
+        }
+
+        .btn-ghost {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid #1d6f8f;
+            color: #1d6f8f;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 550;
+            font-size: 0.85rem;
+            transition: 0.15s;
+            text-decoration: none;
+        }
+
+        .btn-ghost i {
+            margin-right: 6px;
+        }
+
+        .btn-ghost:hover {
+            background: #1d6f8f;
+            color: white;
+            cursor: default;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin: 1.2rem 0;
+        }
+
+        @media (max-width: 700px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+        }
+
+        .info-box {
+            background: white;
+            border-radius: 24px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 20, 30, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: all 0.1s ease;
+        }
+
+        .info-box i {
+            color: #1d6f8f;
+            margin-right: 10px;
+            width: 1.6rem;
+            font-size: 1.1rem;
+        }
+
+        .info-box strong {
+            color: #0b3b5c;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(29, 111, 143, 0.2), transparent);
+            margin: 2rem 0 1.2rem 0;
+        }
+
+        .footer-note {
+            margin-top: 2.2rem;
+            padding: 1.2rem 1.8rem;
+            background: #dff0f8;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            border: 1px solid #c3dcec;
+        }
+
+        .footer-note i {
+            font-size: 1.8rem;
+            color: #0b5e7a;
+        }
+
+        .footer-note span {
+            font-weight: 500;
+        }
+
+        .status-badge {
+            background: #0b3b5c;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border: 1px solid #2a6b8a;
+            margin-left: auto;
+        }
+
+        .status-badge i {
+            margin-right: 6px;
+        }
+
+        /* 小屏优化 */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            .badge {
+                margin-left: 0;
+                margin-top: 0.3rem;
+                width: 100%;
+                text-align: center;
+            }
+            .lead {
+                padding: 1rem;
+            }
+            .code-block {
+                font-size: 0.8rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="header-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1>Certbot 一键搞定 HTTPS</h1>
+            <span class="badge"><i class="fas fa-check-circle"></i> 推荐方案</span>
+        </div>
+
+        <!-- 引导语 -->
+        <div class="lead">
+            <i class="fas fa-rocket"></i>
+            <p>
+                <strong>最推荐</strong> 你用 certbot 这个免费工具，它会自动帮你申请证书并修改 Nginx 配置，全程就几分钟。
+                <span style="display: inline-block; margin-left: 6px; background: #cbddee; padding: 0 10px; border-radius: 30px; font-size: 0.9rem; "><i class="far fa-clock"></i> 快速 · 自动化</span>
+            </p>
+        </div>
+
+        <!-- 安装 Certbot -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-download"></i> 安装 Certbot
+            </div>
+            <p style="margin-bottom: 0.5rem; color: #1f4b62;">按你的系统选一条执行：</p>
+            <div class="code-block">
+<span class="comment"># Ubuntu / Debian</span>
+<span class="cmd">sudo apt update && sudo apt install certbot python3-certbot-nginx -y</span>
+
+<span class="comment"># CentOS / RHEL</span>
+<span class="cmd">sudo yum install certbot python3-certbot-nginx -y</span>
+            </div>
+        </div>
+
+        <!-- 一键配置证书 -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-key"></i> 一键配置证书
+            </div>
+            <p style="margin-bottom: 0.5rem; color: #1f4b62;">
+                <i class="fas fa-chevron-right" style="color: #1d6f8f; font-size: 0.8rem;"></i> 
+                把域名换成你自己的，命令会自动修改 Nginx 配置：
+            </p>
+            <div class="code-block">
+<span class="highlight">sudo certbot --nginx -d www.ashao.dpdns.org</span>
+            </div>
+            <div style="background: #e1eff9; border-radius: 20px; padding: 0.8rem 1.4rem; margin: 0.8rem 0 0.2rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <i class="fas fa-info-circle" style="color: #0b5e7a; font-size: 1.2rem;"></i>
+                <span style="font-weight: 450;">执行后，按提示输入邮箱，同意条款。Certbot 会自动搞定证书申请，并把 Nginx 配置改成支持 HTTPS。</span>
+            </div>
+        </div>
+
+        <!-- 测试并重载 -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-sync-alt"></i> 测试并重载
+            </div>
+            <div class="code-block">
+<span class="cmd">sudo nginx -t && sudo systemctl reload nginx</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 0.3rem;">
+                <span style="background: #d1e7f5; padding: 0.3rem 1.2rem; border-radius: 60px; font-size: 0.9rem;">
+                    <i class="fas fa-lock" style="color: #0b6b4f;"></i> 证书生效后，访问 <span class="inline-code">https://www.a.com</span> 
+                </span>
+                <span style="display: flex; align-items: center; gap: 6px;"><i class="fas fa-check-circle" style="color: #1f8b4c;"></i> 小锁头图标，不安全提示消失</span>
+            </div>
+        </div>
+
+        <!-- 后续建议 + 自动续期 -->
+        <div class="divider"></div>
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-arrow-right"></i> 后续建议 &amp; 维护
+            </div>
+            <div class="grid-2">
+                <div class="info-box">
+                    <i class="fas fa-rotate-left"></i> <strong>证书自动续期</strong>
+                    <div style="margin-top: 8px; font-size: 0.95rem;">Certbot 已设置定时任务，证书到期前自动续期，无需手动操作。</div>
+                </div>
+                <div class="info-box">
+                    <i class="fas fa-server"></i> <strong>重启服务器注意</strong>
+                    <div style="margin-top: 8px; font-size: 0.95rem;">Nginx 已设置开机自启（enabled），但请确认 Docker 里的 OpenResty 容器不会再次自动启动占用 443 端口。</div>
+                </div>
+            </div>
+
+            <!-- 额外命令 -->
+            <div style="background: #f0f6fb; border-radius: 24px; padding: 1.2rem 1.5rem; margin: 0.5rem 0 1.2rem;">
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <i class="fas fa-terminal" style="color: #1d5f7a;"></i>
+                    <span style="font-weight: 500;">如果 OpenResty 容器又跑起来，执行：</span>
+                    <span class="inline-code" style="background: #0e1e2b; color: #b3d9ff; border: none; padding: 0.3rem 1rem;">sudo docker rm -f 04eb912e041f</span>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; background: #fafcfd; border-radius: 30px; padding: 0.8rem 1.5rem; border: 1px solid #d8e5ef;">
+                <span><i class="fas fa-check-circle" style="color: #1f8b4c;"></i> 定期检查：</span>
+                <code style="background: #eef4f8; padding: 0.25rem 1rem; border-radius: 50px; font-size: 0.9rem;">curl -I https://www.ashao.dpdns.org</code>
+                <span style="font-weight: 450;">确认网站状态</span>
+            </div>
+        </div>
+
+        <!-- 最终成功状态 -->
+        <div class="footer-note">
+            <i class="fas fa-check-circle" style="color: #127c4a;"></i>
+            <span style="font-weight: 600; font-size: 1.05rem;">最终能成功访问 <span class="inline-code" style="background: #c0dcec;">https://www.ashao.dpdns.org</span> 并看到 <span class="inline-code" style="background: #c0dcec;">200 OK</span></span>
+            <span style="color: #10445b; margin-left: 0.5rem;">说明你的 Nginx、SSL 证书和域名解析都已完美工作。</span>
+            <span class="status-badge"><i class="fas fa-shield"></i> 安全就绪</span>
+        </div>
+
+        <!-- 微脚标 -->
+        <div style="margin-top: 1.8rem; font-size: 0.8rem; color: #4d7388; display: flex; gap: 20px; flex-wrap: wrap; border-top: 1px solid #d1e2ed; padding-top: 1.2rem; justify-content: space-between;">
+            <span><i class="far fa-calendar-alt"></i> 自动续期已启用 · 无需手动干预</span>
+            <span><i class="fas fa-ubuntu"></i> 支持 Ubuntu / Debian / CentOS / RHEL</span>
+        </div>
+    </div>
+</body>
+</html>
