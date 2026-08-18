@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>持久化 · 存储 · 笔记</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f0f5fa 0%, #dce6ef 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1rem;
+      color: #142b3b;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.70);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 44px;
+      padding: 2.8rem 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 20, 30, 0.30),
+                  0 8px 24px -6px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border-bottom: 4px solid #1f6390;
+      padding-bottom: 0.7rem;
+      margin-bottom: 2.2rem;
+      color: #0a293f;
+      flex-wrap: wrap;
+    }
+
+    h1 i {
+      color: #1f6390;
+      font-size: 2.4rem;
+    }
+
+    .badge-header {
+      font-size: 1rem;
+      margin-left: auto;
+      background: #d2e3f0;
+      padding: 0.25rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 400;
+      color: #124263;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+
+    .date-badge {
+      background: #c2d9e9;
+      padding: 0.2rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #0f3b57;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-left: 0.8rem;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 500;
+      margin-top: 2.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #1a4b6e;
+      border-left: 6px solid #3d8ec0;
+      padding-left: 1.2rem;
+      background: linear-gradient(to right, rgba(61,142,192,0.07), transparent);
+      border-radius: 0 14px 14px 0;
+    }
+
+    h2 i {
+      color: #3d8ec0;
+      font-size: 1.6rem;
+      width: 2.2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 1.8rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1d4b6b;
+    }
+
+    h3 i {
+      color: #4f9bc9;
+      font-size: 1.3rem;
+      width: 2rem;
+    }
+
+    .code-block {
+      background: #0e1e2b;
+      color: #e3f0fa;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.95rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0.8rem 0 1.4rem 0;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), 0 6px 14px -6px rgba(0,20,30,0.2);
+      border: 1px solid #2b4b64;
+      position: relative;
+    }
+
+    .code-block i {
+      color: #8fcbff;
+      margin-right: 0.5rem;
+    }
+
+    .code-block .comment {
+      color: #8baec9;
+      font-style: italic;
+    }
+
+    .inline-code {
+      background: #eaf0f6;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #0b344f;
+      border: 1px solid #cbdae6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #d4e3f0;
+      border-radius: 30px;
+      padding: 0.1rem 1.1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #124263;
+    }
+
+    ul, ol {
+      margin: 0.6rem 0 0.8rem 1.8rem;
+      line-height: 1.7;
+    }
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    li i {
+      color: #2b7aa2;
+      width: 1.8rem;
+      text-align: center;
+      margin-right: 0.2rem;
+    }
+
+    .highlight-box {
+      background: rgba(61, 142, 192, 0.06);
+      border-radius: 22px;
+      padding: 1.2rem 1.8rem;
+      margin: 1.2rem 0;
+      border-left: 6px solid #3d8ec0;
+      backdrop-filter: blur(2px);
+    }
+
+    .highlight-box i {
+      color: #2b7aa2;
+      margin-right: 0.6rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+      margin: 0.8rem 0;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.1s ease;
+    }
+
+    .grid-item i {
+      color: #2b7aa2;
+      margin-right: 0.5rem;
+    }
+
+    .divider {
+      margin: 2.2rem 0 1.2rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4e8, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2.8rem;
+      text-align: right;
+      font-size: 0.95rem;
+      color: #4d6a82;
+      border-top: 1px solid #caddf0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-note i {
+      color: #3d8ec0;
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: #1f6390;
+      color: white;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 1rem;
+      margin-right: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .pain-point {
+      background: rgba(180, 60, 60, 0.05);
+      border-left: 4px solid #b34a4a;
+      padding: 0.8rem 1.2rem;
+      border-radius: 16px;
+      margin: 0.8rem 0;
+    }
+
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.8rem 1.2rem;
+      }
+      h1 {
+        font-size: 2rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .badge-header, .date-badge {
+        margin-left: 0;
+        width: auto;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .code-block {
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 + 日期 -->
+  <h1>
+    <i class="fas fa-database"></i> 
+    数据库前传
+    <span class="badge-header"><i class="fas fa-hdd"></i> 从内存到文件</span>
+    <span class="date-badge"><i class="far fa-calendar-alt"></i> <span id="todayDate"></span></span>
+  </h1>
+
+  <!-- 引言 -->
+  <p><i class="fas fa-feather-alt" style="color:#2b7aa2;"></i> 到现在为止，项目没有记忆。在文字实验室里分析一句，结果出来了；再分析下一句，前一条就没了。如果刷新页面，已经分析过的内容也没了；重启后端的话，查询记录更是被清除的干干净净。今天之前，所有数据都是——用完即弃。</p>
+
+  <h2><i class="fas fa-question-circle"></i> 没有记忆，会有什么影响？</h2>
+  <p>对用户来说，文字实验室这样的小工具，有没有记忆其实没太大所谓——查完一句、拿到结果就走，记不记得上次查了什么，多数时候并不重要。</p>
+  <div class="highlight-box">
+    <i class="fas fa-chart-line"></i> 但对运营者来说，如果没有存储，那丢掉的东西可就多了：每天有多少次查询？大家一般都在查些什么？我们那个情感模型，放到真实句子上，到底准不准？——这些问题，全都要靠把数据存下来，才有进一步分析的可能。数据不是"存着好看"，它是运营者手里的一份家底。
+  </div>
+  <p><i class="fas fa-shield-alt" style="color:#2b7aa2;"></i> 当然，存了用户的输入，也就多了一份责任——怎么保管、给谁看，这些也都是我们需要考虑的事情。</p>
+  <p><i class="fas fa-archive" style="color:#2b7aa2;"></i> 让项目拥有记忆的能力——这件事就叫<strong>持久化</strong>。我们这一节就给我们的项目做一下持久化，但在写第一行代码之前，我们先花几分钟，把"存储"这件事本身想清楚。</p>
+
+  <!-- 存储：古老的事 -->
+  <h2><i class="fas fa-history"></i> 存储：一件很古老的事</h2>
+  <p>说到"把数据存起来"，很多人立刻想到数据库。但我们需要把顺序摆正：是先有了存储的需求，才有的数据库，而不是反过来。</p>
+  <div class="highlight-box">
+    <i class="fas fa-scroll"></i> 存储这件事，古老得超乎想象。人类存储信息存了几千年——结绳、泥板、账本、档案柜。有一种很有意思的说法：人类最早的文字，很可能就是为了记账，记"谁欠了多少袋粮食"。也就是说，“把事记下来、以后能查"这件事，比文字本身还要古老。数据库只是这条几千年长河里最新、最强的一种形态而已，不是什么神秘的东西。
+  </div>
+  <p>而且，存和取，从来是一体两面、拆不开的。我们存东西，不是为了"存"这个动作本身，而是为了以后能取出来用——存了永远不取等于没存。</p>
+
+  <h2><i class="fas fa-folder-tree"></i> 存在哪儿：四种常见的存储</h2>
+  <ul>
+    <li><i class="fas fa-microchip"></i> <strong>内存</strong> — CPU 干活的空间，飞快，但断电即失；</li>
+    <li><i class="fas fa-file-alt"></i> <strong>文件</strong> — 硬盘上的一份份文件，最直接、谁都会用；</li>
+    <li><i class="fas fa-database"></i> <strong>数据库</strong> — 专为"存好、取快"而生，能筛选、能排序、能统计；</li>
+    <li><i class="fas fa-cloud"></i> <strong>云 / 对象存储</strong> — 专门存大文件、图片、视频那种。</li>
+  </ul>
+  <p><i class="fas fa-balance-scale" style="color:#2b7aa2;"></i> 这些技术"没有绝对的好，只有合不合适”。这一节，我们从最上边这两种入手——先看内存，再看文件。</p>
+
+  <h2><i class="fas fa-bolt"></i> 内存：快，但留不住</h2>
+  <p>代码的运行过程本身就是一个读、写内存的过程——每个变量、每份 state，都活在内存里。我们可以用 Python 的 REPL 试一试：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> >>> brothers = []<br>>>> brothers.append("刘备")<br>>>> brothers.append("关羽")<br>>>> brothers.append("张飞")<br>>>> brothers<br>['刘备', '关羽', '张飞']</div>
+  <p>这个时候，内存里面就有了这三兄弟的名字，只要程序还在运行，这个列表就一直存在于内存里，随时可以取出来看。</p>
+  <p>但如果现在退出 REPL，再重新进来：</p>
+  <div class="code-block"><i class="fas fa-terminal"></i> >>> exit()<br><br>>>> brothers<br>NameError: name 'brothers' is not defined</div>
+  <div class="highlight-box">
+    <i class="fas fa-exclamation-triangle"></i> 内存快，但留不住——内存里存的东西一断电或者一重启就没了；何况内存容量也有限，本就不该拿来长期囤东西。
+  </div>
+  <p>再回头看我们的需求：用户的查询记录，我们既不想它丢，又要能长期留着。那内存就不合适。最直观、最不容易丢的存储是什么？——<strong>文件</strong>。</p>
+
+  <h2><i class="fas fa-save"></i> 存到文件：存什么，怎么存</h2>
+  <p>假设我们要把所有用户在文字实验室查过的文字和结果，都存进一个文件。首先需要思考个事情：存什么内容、用什么格式存。</p>
+  <h3><i class="fas fa-list-ul"></i> 存什么</h3>
+  <p>一条记录，至少得有分析结果的那四个字段，再加上"什么时候查的"：</p>
+  <div class="code-block" style="background: #0f222f;"><i class="fas fa-table"></i> text        原文<br>score       情感分数<br>label       结论<br>pinyin      拼音<br>created_at  时间</div>
+
+  <h3><i class="fas fa-code"></i> 怎么存</h3>
+  <p>最朴素的想法是"按行写"——一条记录写一行纯文本。但很快就会犯难：一行里这么多字段，有时间，有情感分数，有结论等等。靠什么分开？用逗号？可原文里本来就可能有逗号。读回来的时候又怎么切准？</p>
+  <div class="code-block" style="background: #0f222f;"><i class="fas fa-exclamation-circle"></i> 今天心情不错,0.88,偏积极,jīn tiān xīn qíng bù cuò,2026-07-04T07:30:00+00:00<br>我喜欢, 真的喜欢,0.96,偏积极,wǒ xǐ huān , zhēn de xǐ huān,2026-07-04T07:31:12+00:00</div>
+  <p><i class="fas fa-times-circle" style="color:#b34a4a;"></i> 第二行就出事了：原文"我喜欢, 真的喜欢"里本来就带了个逗号，这一行就冒出了六段，程序数着逗号切字段，立刻错位。</p>
+  <p>更好的选择是 <span class="inline-code">JSON</span>。它能清清楚楚地区分每个字段、固定住一种结构，而且用 Python 读它、写它都很方便。</p>
+  <div class="code-block" style="background: #0f222f;">[<br>  {<br>    "text": "我喜欢, 真的喜欢",<br>    "score": 0.96,<br>    "label": "偏积极",<br>    "pinyin": "wǒ xǐ huān , zhēn de xǐ huān",<br>    "created_at": "2026-07-04T07:31:12+00:00"<br>  }<br>]</div>
+
+  <h2><i class="fas fa-clock"></i> 单独说说时间：藏着"时区"这个坑</h2>
+  <p><span class="inline-code">created_at</span> 这个时间戳，看着最简单，其实是编程里最容易踩的坑之一，坑就坑在时区。</p>
+  <div class="highlight-box">
+    <i class="fas fa-globe-asia"></i> 业界的通行规矩是：存的时候，一律用统一、无歧义的基准时间——<strong>UTC</strong>（协调世界时）；显示给用户时，再转成他所在的本地时间。比如说北京时间就是 UTC+8。
+  </div>
+  <div class="highlight-box">
+    <i class="fas fa-globe-asia"></i> python的交互里面看看效果,末尾那个 +00:00，就是它在明明白白地说"我是 UTC 基准的时间"。带上它，这个时间戳走到世界上任何角落，都能被准确换算成当地时间，再无歧义。
+
+  </div>
+  <div class="code-block"><i class="fas fa-terminal"></i> >>> from datetime import datetime, timezone<br>>>> datetime.now(timezone.utc).isoformat(timespec="seconds")<br>'2026-07-04T07:30:00+00:00'</div>
+
+  <h2><i class="fas fa-file-import"></i> 写与读：存档，和读历史的接口</h2>
+  <p>回到 <span class="inline-code">backend/main.py</span>。顶部补两个标准库 import：</p>
+  <div class="code-block"><i class="fas fa-code"></i> import json<br>from datetime import datetime, timezone</div>
+
+  <h3><i class="fas fa-pen"></i> 写：存档函数</h3>
+  <div class="code-block"><i class="fas fa-file-code"></i> HISTORY_FILE = "history.json"<br><br>def load_history():<br>    try:<br>        with open(HISTORY_FILE, "r", encoding="utf-8") as f:<br>            return json.load(f)<br>    except FileNotFoundError:<br>        return []<br><br>def save_record(record):<br>    records = load_history()<br>    records.append(record)<br>    with open(HISTORY_FILE, "w", encoding="utf-8") as f:<br>        json.dump(records, f, ensure_ascii=False, indent=2)</div>
+  <p><span class="inline-code">with open(...) as f</span> — 打开文件，<span class="inline-code">with</span> 表示"用完自动关好"；<span class="inline-code">try/except</span> 接住"文件不存在"。</p>
+
+  <h3><i class="fas fa-upload"></i> 在 analyze 中存档</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> @app.post("/api/analyze")<br>def analyze(req: AnalyzeRequest):<br>    text = req.text<br>    score = round(SnowNLP(text).sentiments, 2)<br>    result = {<br>        "text": text,<br>        "score": score,<br>        "label": score_label(score),<br>        "pinyin": " ".join(lazy_pinyin(text, style=Style.TONE)),<br>        "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),<br>    }<br>    save_record(result)<br>    return result</div>
+
+  <h3><i class="fas fa-book-open"></i> 读：历史接口</h3>
+  <div class="code-block"><i class="fas fa-terminal"></i> @app.get("/api/history")<br>def history():<br>    records = load_history()<br>    records.reverse()          # 新的排前面<br>    return records[:10]        # 只留最近 10 条</div>
+
+  <h2><i class="fas fa-eye"></i> 见证持久化，再看清读写时发生了什么</h2>
+  <div class="highlight-box">
+    <i class="fas fa-rocket"></i>  curl http://localhost:8000/api/history    第一次访问，什么也没有
+  </div>
+  <div class="highlight-box">
+    <i class="fas fa-rocket"></i>http://localhost:8000/docs 找到 /api/analyze 端点，点击 "Try it out"，输入： {"text": "今天的风很轻"} 然后点击 "Execute"。
+    </div>
+  <p>用 VS Code 打开 <span class="inline-code">backend/history.json</span>，我们的每一次分析，白纸黑字躺在这里——中文原样、格式工整。这就是"数据落盘"。</p>
+  <div class="highlight-box">
+    <i class="fas fa-rocket"></i> 把后端 Ctrl + C 杀掉、重启，再 curl — 记录一条都没少。这就是<strong>持久化</strong>（persistence）。
+  </div>
+
+  <div class="pain-point">
+    <p><i class="fas fa-exclamation-triangle" style="color:#b34a4a;"></i> <strong>文件方案的四处痛：</strong></p>
+    <ul style="margin-left: 0.5rem;">
+      <li><i class="fas fa-forward"></i> 读十条，搬空全部（效率）</li>
+      <li><i class="fas fa-backward"></i> 存一条，重写整份（效率）</li>
+      <li><i class="fas fa-users"></i> 多人同时读写就出乱子——写盖写叫脏写、读到写一半叫脏读（并发）</li>
+      <li><i class="fas fa-bug"></i> 写到一半崩了，一坏全坏（健壮）</li>
+    </ul>
+    <p style="margin-top: 0.5rem;"><i class="fas fa-database" style="color:#2b7aa2;"></i> 而这些问题——尤其"多人同时读写别出乱子”——有一套专门的机制来收拾，业界叫<strong>事务</strong>（transaction）；提供事务的那类软件，正是<strong>数据库</strong>。</p>
+  </div>
+
+  <h2><i class="fas fa-user-secret"></i> 悬念：这历史是"谁的"？</h2>
+  <ul>
+    <li><i class="fas fa-user-circle"></i> 每个访客应该只看到自己的。 要把历史"分到每个人名下"，服务器得先能认出"这是同一个浏览器"——这套机制叫<strong>会话</strong>（session），是 6.6 的主角。</li>
+    <li><i class="fas fa-eye-slash"></i> 不能把大家的输入公开列在页面上。 一个公开展示用户生成内容（UGC）的页面，上线要过备案和内容审核。</li>
+  </ul>
+
+  <hr class="divider">
+  <div class="footer-note">
+    <i class="fas fa-database"></i> 
+    <span>从内存到文件 · 持久化第一步</span>
+    <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;">下一节 · 数据库登场</span>
+    <i class="fas fa-terminal" style="margin-left: 0.5rem;"></i>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    document.getElementById('todayDate').textContent = y + '-' + m + '-' + d;
+  })();
+</script>
+</body>
+</html>

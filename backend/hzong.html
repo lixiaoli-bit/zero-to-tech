@@ -381,11 +381,11 @@
     <span class="badge-header"><i class="fas fa-book-open"></i> 系列笔记 · 索引</span>
   </h1>
 
-  <!-- 简介区：有条理地概括四篇笔记，保留磨砂 -->
+  <!-- 简介区：有条理地概括六篇笔记，保留磨砂 -->
   <div class="intro-section">
     <p>
       <i class="fas fa-arrow-right" style="color: #2b7aa2; margin-right: 0.5rem;"></i>
-      本系列笔记围绕 <strong>“后端开发与 API”</strong> 展开，按 <strong>“理解概念 → 搭建环境 → 手写实现 → 框架提效”</strong> 的路径递进。
+      本系列笔记围绕 <strong>“后端开发与 API”</strong> 展开，按 <strong>“理解概念 → 搭建环境 → 手写实现 → 框架提效 → 换芯真分析 → 持久化记忆”</strong> 的路径递进。
       每篇都配有可运行的代码和动手实验，适合跟着敲一遍。
     </p>
     <div class="highlight-list">
@@ -393,10 +393,12 @@
       <span><i class="fab fa-python"></i> ② 安装 Python —— 把开发环境搭好</span>
       <span><i class="fas fa-code-branch"></i> ③ 手搓 API —— 自己实现一个 HTTP 服务</span>
       <span><i class="fas fa-code"></i> ④ FastAPI 框架 —— 用框架把杂活打包复用</span>
+      <span><i class="fas fa-microchip"></i> ⑤ 换芯 · 真分析 —— 接入 pypinyin + snownlp，让 /api/analyze 变真</span>
+      <span><i class="fas fa-database"></i> ⑥ 持久化前传 —— 从内存到文件，让项目拥有记忆</span>
     </div>
   </div>
 
-  <!-- 卡片网格：四篇笔记，标题带序号 + 底部跳转链接（仿 main.html） -->
+  <!-- 卡片网格：六篇笔记，标题带序号 + 底部跳转链接（仿 main.html） -->
   <div class="card-grid">
 
     <!-- 1. API 调用笔记 -->
@@ -511,6 +513,67 @@
       </div>
     </div>
 
+    <!-- 5. 换芯 · 真分析 (6.1.html) -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-microchip"></i>
+        <h2>
+          <span class="order-badge">5</span>
+          换芯 · 真分析
+        </h2>
+      </div>
+      <div class="sub">
+        <i class="fas fa-brain"></i> 从占位 0.5 分到 pypinyin + snownlp
+      </div>
+      <ul class="desc-list">
+        <li><i class="fas fa-chevron-right"></i> 找库：<code>pypinyin</code> 转拼音 + <code>snownlp</code> 情感分析</li>
+        <li><i class="fas fa-chevron-right"></i> REPL 验货：装库、交互式验证、快速建立手感</li>
+        <li><i class="fas fa-chevron-right"></i> 换芯实现：守住接口约定，内部替换算法，前端无感知</li>
+        <li><i class="fas fa-chevron-right"></i> 看清模型边界：中性陈述翻车、反讽识别失败，用前必知其限</li>
+      </ul>
+      <div class="meta-tags">
+        <span><i class="fas fa-language"></i> pypinyin</span>
+        <span><i class="fas fa-heart"></i> snownlp</span>
+        <span><i class="fas fa-terminal"></i> REPL</span>
+        <span><i class="fas fa-exclamation-triangle"></i> 模型边界</span>
+      </div>
+      <div class="card-footer-link">
+        <a href="./6.1.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+        <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
+      </div>
+    </div>
+
+    <!-- 6. 持久化前传 (6.3.html) -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-database"></i>
+        <h2>
+          <span class="order-badge">6</span>
+          持久化前传
+        </h2>
+      </div>
+      <div class="sub">
+        <i class="fas fa-hdd"></i> 从内存到文件 · 让项目拥有记忆
+      </div>
+      <ul class="desc-list">
+        <li><i class="fas fa-chevron-right"></i> 没有记忆的痛点：数据用完即弃，运营者无法分析</li>
+        <li><i class="fas fa-chevron-right"></i> 存储是古老的事：先有存储需求，后有数据库</li>
+        <li><i class="fas fa-chevron-right"></i> 内存 vs 文件：内存快但留不住，文件最直观</li>
+        <li><i class="fas fa-chevron-right"></i> 用 JSON 写/读历史，实现 <code>/api/history</code> 接口</li>
+        <li><i class="fas fa-chevron-right"></i> 看清文件方案的痛：效率、并发、健壮，引出数据库</li>
+      </ul>
+      <div class="meta-tags">
+        <span><i class="fas fa-file-alt"></i> JSON</span>
+        <span><i class="fas fa-clock"></i> UTC 时间</span>
+        <span><i class="fas fa-exclamation-triangle"></i> 并发隐患</span>
+        
+      </div>
+      <div class="card-footer-link">
+        <a href="./6.3.html" class="btn-link" target="_blank" rel="noopener"><i class="fas fa-book-open"></i> 阅读全文</a>
+        <span style="font-size: 0.7rem; color: #4a6a88; opacity: 0.7; margin-left: auto;"><i class="fas fa-arrow-right"></i></span>
+      </div>
+    </div>
+
   </div>
 
   <!-- 底部 -->
@@ -519,7 +582,7 @@
     <i class="fas fa-book"></i>
     <span>后端 · 从零到 API · 系列笔记</span>
     <i class="fas fa-code" style="margin-left: 0.5rem;"></i>
-    <span style="font-weight: 300; opacity: 0.8;"># Python · HTTP · FastAPI</span>
+    <span style="font-weight: 300; opacity: 0.8;"># Python · HTTP · FastAPI · 持久化</span>
     <i class="fas fa-terminal" style="margin-left: 0.5rem;"></i>
   </div>
 
